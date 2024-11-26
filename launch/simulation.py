@@ -26,17 +26,17 @@ def generate_launch_description():
             DeclareLaunchArgument(
                 "params_file",
                 default_value=os.path.join(
-                    get_package_share_directory("ros2_example_package"),
+                    get_package_share_directory("simulation"),
                     "config",
                     "ros_params.yaml",
                 ),
                 description="Path to the ROS parameters file",
             ),
             Node(
-                package="ros2_example_package",
+                package="simulation",
                 namespace="",  # Is also the namespace for loading the params
-                executable="ros2_example_node",
-                name="ros2_example_node",
+                executable="simulation_node",
+                name="simulation_node",
                 parameters=[
                     {"debug": debug},
                     params_file,

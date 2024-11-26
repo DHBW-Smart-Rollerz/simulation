@@ -1,15 +1,16 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ros2_example_package</name>
+  <name>simulation</name>
   <version>0.0.0</version>
-  <description>The ros2_example_package package</description>
+  <description>The simulation package</description>
   <maintainer email="info@dhbw-smartrollerz.org">DHBW Smart Rollerz</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <depend>rclpy</depend>
   <depend>timing</depend>
   <depend>setup_utils</depend>
+  <depend>ros_gz_sim</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
