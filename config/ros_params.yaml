@@ -1,2 +1,4 @@
-simulation_node:
+robot_description_publisher:
   ros__parameters:
+    model_path: "models/smarty"
+    robot_description_topic: "/robot_description"

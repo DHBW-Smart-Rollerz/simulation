@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+  <world name="smartrollerz">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+    <plugin filename="gz-sim-imu-system"
+      name="gz::sim::systems::Imu">
+    </plugin>
+    <plugin
+      filename="gz-sim-sensors-system"
+      name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>50</mu>
+              </ode>
+              <bullet>
+                <friction>1</friction>
+                <rolling_friction>0.1</rolling_friction>
+              </bullet>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="smarty">
+      <self_collide>true</self_collide>
+      <pose>0 0 0.325 0 0 0</pose>
+
+      <include merge="true">
+        <uri>model://models/smarty</uri>
+      </include>
+
+      <!-- Publishes the poses of the models links to /model/{model_name}/pose. Static
+      links that never change the relativ position to its parent will be published on
+      the topic /model/{model_name}/pose_static. The pose includes not only the position
+      and orientation but also the transformation to its parent. -->
+      <plugin
+        filename="gz-sim-pose-publisher-system"
+        name="gz::sim::systems::PosePublisher">
+        <publish_link_pose>true</publish_link_pose>
+        <use_pose_vector_msg>true</use_pose_vector_msg>
+        <static_publisher>true</static_publisher>
+        <static_update_frequency>1</static_update_frequency>
+      </plugin>
+
+      <!-- Publishes the odometry of the models links to /model/{model_name}/odometry.
+      The odometry is the position and orientation of the frames -->
+      <plugin
+        filename="gz-sim-odometry-publisher-system"
+        name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>world</odom_frame>
+        <robot_base_frame>smarty</robot_base_frame>
+        <dimensions>3</dimensions>
+      </plugin>
+
+      <plugin
+        filename="gz-sim-ackermann-steering-system"
+        name="gz::sim::systems::AckermannSteering">
+        <left_joint>front_left_wheel_joint</left_joint>
+        <right_joint>front_right_wheel_joint</right_joint>
+        <left_steering_joint>front_left_wheel_steering_joint</left_steering_joint>
+        <right_steering_joint>front_right_wheel_steering_joint</right_steering_joint>
+        <kingpin_width>1.0</kingpin_width>
+        <steering_limit>0.5</steering_limit>
+        <wheel_base>1.0</wheel_base>
+        <wheel_separation>1.25</wheel_separation>
+        <wheel_radius>0.3</wheel_radius>
+
+        <!-- The odometry and pose published from this plugin are not used and rather
+        those from the seperate pose and odometry plugins as those include all links
+        and this plugin only the model itself. -->
+        <odom_topic>/model/smarty/odometry/ackermann</odom_topic>
+        <tf_topic>/model/smarty/pose/ackermann</tf_topic>
+      </plugin>
+    </model>
+  </world>
+</sdf>
