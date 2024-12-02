@@ -35,6 +35,7 @@ setup(
     entry_points={
         "console_scripts": [
             f"robot_description_publisher = {package_name}.robot_description_publisher:main",
+            f"car_control_bridge = {package_name}.car_control_bridge:main",
         ],
     },
 )

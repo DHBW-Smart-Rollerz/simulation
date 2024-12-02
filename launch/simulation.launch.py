@@ -80,6 +80,14 @@ def generate_launch_description():
                 ],
             ),
             Node(
+                package="simulation",
+                executable="car_control_bridge",
+                name="car_control_bridge",
+                parameters=[
+                    params_file,
+                ],
+            ),
+            Node(
                 package="rviz2",
                 executable="rviz2",
                 arguments=[
