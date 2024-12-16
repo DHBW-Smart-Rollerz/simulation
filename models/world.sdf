@@ -2,6 +2,10 @@
 <sdf version="1.8">
   <world name="smartrollerz">
 
+    <scene>
+      <grid>false</grid>
+    </scene>
+
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
@@ -68,13 +72,19 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>100 100</size>
+              <size>20 20</size>
             </plane>
           </geometry>
           <material>
             <ambient>0.8 0.8 0.8 1</ambient>
             <diffuse>0.8 0.8 0.8 1</diffuse>
-            <specular>0.8 0.8 0.8 1</specular>
+            <specular>0.2 0.2 0.2 1</specular>
+            <pbr>
+              <metal>
+                <albedo_map>default_road.png</albedo_map>
+                <roughness>0.8</roughness>
+              </metal>
+            </pbr>
           </material>
         </visual>
       </link>
@@ -82,7 +92,7 @@
 
     <model name="smarty">
       <self_collide>true</self_collide>
-      <pose>0 0 0.325 0 0 0</pose>
+      <pose>0 0 0 0 0 0</pose>
 
       <include merge="true">
         <uri>model://models/smarty</uri>
