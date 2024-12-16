@@ -3,7 +3,7 @@
   <model name='smarty'>
 
     <link name='chassis'>
-      <pose>0 0 0.1125 0 0 0</pose>
+      <pose>-0.151427 -0 0.175 0 -0 0</pose>
       <inertial>
         <mass>1.14395</mass>
         <inertia>
@@ -18,7 +18,7 @@
       <visual name='visual_chassis'>
         <geometry>
           <box>
-            <size>0.370 0.125 0.120</size>
+            <size>2.01142 1 0.568726</size>
           </box>
         </geometry>
         <material>
@@ -30,14 +30,14 @@
       <collision name='collision_chassis'>
         <geometry>
           <box>
-            <size>0.370 0.125 0.120</size>
+            <size>2.01142 1 0.568726</size>
           </box>
         </geometry>
       </collision>
     </link>
 
     <link name='front_left_wheel'>
-      <pose>0.140 0.0845 0.0345 -1.5707 0 0</pose>
+      <pose>0.554283 0.625029 -0.025 -1.5707 0 0</pose>
       <inertial>
         <mass>2</mass>
         <inertia>
@@ -52,8 +52,8 @@
       <visual name='visual_front_left_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <material>
@@ -65,8 +65,8 @@
       <collision name='collision_front_left_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <surface>
@@ -87,7 +87,7 @@
     </link>
 
     <link name='rear_left_wheel'>
-      <pose>-0.115 0.0845 0.0345 -1.5707 0 0</pose>
+      <pose>-0.957138 0.625029 -0.025 -1.5707 0 0</pose>
       <inertial>
         <mass>2</mass>
         <inertia>
@@ -102,8 +102,8 @@
       <visual name='visual_rear_left_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <material>
@@ -115,8 +115,8 @@
       <collision name='collision_rear_left_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <surface>
@@ -137,7 +137,7 @@
     </link>
 
     <link name='front_right_wheel'>
-      <pose>0.140 -0.0845 0.0345 -1.5707 0 0</pose>
+      <pose>0.554282 -0.625029 -0.025 -1.5707 0 0</pose>
       <inertial>
         <mass>2</mass>
         <inertia>
@@ -152,8 +152,8 @@
       <visual name='visual_front_right_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <material>
@@ -165,8 +165,8 @@
       <collision name='collision_front_right_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <surface>
@@ -187,7 +187,7 @@
     </link>
 
     <link name='rear_right_wheel'>
-      <pose>-0.115 -0.0845 0.0345 -1.5707 0 0</pose>
+      <pose>-0.957138 -0.625029 -0.025 -1.5707 0 0</pose>
       <inertial>
         <mass>2</mass>
         <inertia>
@@ -202,8 +202,8 @@
       <visual name='visual_rear_right_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <material>
@@ -215,8 +215,8 @@
       <collision name='collision_rear_right_wheel'>
         <geometry>
           <cylinder>
-            <length>0.028</length>
-            <radius>0.0345</radius>
+            <length>0.15</length>
+            <radius>0.3</radius>
           </cylinder>
         </geometry>
         <surface>
@@ -237,7 +237,7 @@
     </link>
 
     <link name="front_left_wheel_steering_link">
-      <pose>0.140 0.0765 0.0345 0 0 0</pose>
+      <pose>0.554283 0.5 0.02 0 0 0</pose>
       <inertial>
         <mass>0.5</mass>
         <inertia>
@@ -246,23 +246,23 @@
           <izz>0.0153</izz>
         </inertia>
       </inertial>
-      <!-- <visual name="steering_link_visual">
+      <visual name="steering_link_visual">
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <cylinder>
-            <length>0.01</length>
-            <radius>0.003</radius>
+            <length>0.1</length>
+            <radius>0.03</radius>
           </cylinder>
         </geometry>
         <material>
           <ambient>1 1 1</ambient>
           <diffuse>1 1 1</diffuse>
         </material>
-      </visual> -->
+      </visual>
     </link>
 
     <link name="front_right_wheel_steering_link">
-      <pose>0.140 -0.0765 0.0345 0 0 0</pose>
+      <pose>0.554283 -0.5 0.02 0 0 0</pose>
       <inertial>
         <mass>0.5</mass>
         <inertia>
@@ -271,19 +271,19 @@
           <izz>0.0153</izz>
         </inertia>
       </inertial>
-      <!-- <visual name="steering_link_visual">
+      <visual name="steering_link_visual">
         <pose>0 0 0 0 0 0</pose>
         <geometry>
           <cylinder>
-            <length>0.01</length>
-            <radius>0.003</radius>
+            <length>0.1</length>
+            <radius>0.03</radius>
           </cylinder>
         </geometry>
         <material>
           <ambient>1 1 1</ambient>
           <diffuse>1 1 1</diffuse>
         </material>
-      </visual> -->
+      </visual>
     </link>
 
     <joint name="front_left_wheel_steering_joint" type="revolute">
@@ -362,39 +362,8 @@
       </axis>
     </joint>
 
-    <link name="camera_pole_link">
-      <pose>-0.115 0 0.185 0 0 0</pose>
-      <inertial>
-        <mass>0.1</mass>
-        <inertia>
-          <ixx>0.000166667</ixx>
-          <iyy>0.000166667</iyy>
-          <izz>0.000166667</izz>
-        </inertia>
-      </inertial>
-      <collision name="collision_camera_pole">
-        <geometry>
-          <box>
-            <size>0.01 0.01 0.130</size>
-          </box>
-        </geometry>
-      </collision>
-      <visual name="visual_camera_pole">
-        <geometry>
-          <box>
-            <size>0.01 0.01 0.130</size>
-          </box>
-        </geometry>
-        <material>
-          <ambient>0.5 0.5 1.0 1</ambient>
-          <diffuse>0.5 0.5 1.0 1</diffuse>
-          <specular>0.0 0.0 1.0 1</specular>
-        </material>
-      </visual>
-    </link>
-
     <link name="camera_link">
-      <pose>-0.090 0 0.250 0 0.610865 0</pose>
+      <pose>-0.4 0 0.75 0 0 0</pose>
       <inertial>
         <mass>0.1</mass>
         <inertia>
@@ -406,28 +375,23 @@
       <collision name="collision_camera">
         <geometry>
           <box>
-            <size>0.05 0.04 0.04</size>
+            <size>0.1 0.1 0.1</size>
           </box>
         </geometry>
       </collision>
       <visual name="visual_camera">
         <geometry>
           <box>
-            <size>0.05 0.04 0.04</size>
+            <size>0.1 0.1 0.1</size>
           </box>
         </geometry>
-        <material>
-          <ambient>0.5 0.5 1.0 1</ambient>
-          <diffuse>0.5 0.5 1.0 1</diffuse>
-          <specular>0.0 0.0 1.0 1</specular>
-        </material>
       </visual>
       <sensor name="camera" type="camera">
         <camera>
-          <horizontal_fov>1.858</horizontal_fov>
+          <horizontal_fov>1.047</horizontal_fov>
           <image>
-            <width>2064</width>
-            <height>1544</height>
+            <width>320</width>
+            <height>240</height>
           </image>
           <clip>
             <near>0.1</near>
@@ -441,13 +405,8 @@
       </sensor>
     </link>
 
-    <joint name='camera_pole_joint' type='fixed'>
-      <parent>chassis</parent>
-      <child>camera_pole_link</child>
-    </joint>
-
     <joint name='camera_joint' type='fixed'>
-      <parent>camera_pole_link</parent>
+      <parent>chassis</parent>
       <child>camera_link</child>
     </joint>
 
