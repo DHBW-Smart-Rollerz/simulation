@@ -5,9 +5,9 @@ from typing import List
 import cairo
 from cairo import Context
 
-import simulation.groundtruth.road.renderer.utils as utils
 from simulation.groundtruth.geometry import Line, Point, Polygon, Vector
 from simulation.groundtruth.road.config import Config
+from simulation.groundtruth.road.renderer import utils
 from simulation.groundtruth.road.sections import SurfaceMarking
 from simulation.groundtruth.road.sections.road_section import MarkedLine, RoadSection
 

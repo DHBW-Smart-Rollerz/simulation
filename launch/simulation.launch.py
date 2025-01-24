@@ -88,6 +88,11 @@ def generate_launch_description():
                 ],
             ),
             Node(
+                package="simulation",
+                executable="world_spawner",
+                name="world_spawner",
+            ),
+            Node(
                 package="rviz2",
                 executable="rviz2",
                 arguments=[

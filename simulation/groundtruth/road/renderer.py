@@ -1,9 +1,72 @@
 import itertools
 from collections import defaultdict
 
+import cairo
+
 from simulation.groundtruth.geometry import Vector
 from simulation.groundtruth.road.renderer.tile import Tile
 from simulation.groundtruth.road.road import Road
+
+
+# def render_to_file(self, roads_path: str):
+#     """Render an image of the tile and save it to a file.
+
+#     Args:
+#         roads_path: Directory in which all roads are located.
+#     """
+#     # Resolution of the image per meter
+#     resolution = (512, 512)
+#     size = (15, 15)
+
+#     surface = cairo.ImageSurface(
+#         cairo.FORMAT_RGB24, int(resolution[0]), int(resolution[1])
+#     )
+#     ctx = cairo.Context(surface)
+
+#     # Adjust scale
+#     ctx.scale(resolution[0] / size[0], resolution[1] / size[1])
+#     # Inverse y-axis
+#     ctx.translate(0, size[1] / 2)
+#     ctx.scale(1, -1)
+#     ctx.translate(0, -size[1] / 2)
+
+#     # Move to center of the tile
+#     ctx.translate(size[0] / 2, size[1] / 2)
+
+#     # Create black background
+#     ctx.set_source_rgb(0, 0, 0)
+#     ctx.rectangle(0, 0, size[0], size[1])
+#     ctx.fill()
+
+#     # Invert the render transform
+#     ctx.translate(-self.transform.translation.x, -self.transform.translation.y)
+
+#     # Draw lines for all sections
+#     for sec in self.sections.values():
+#         for line in sec.lines:
+#             # print("LINE1234: ", line)
+#             utils.draw_line(ctx, line)
+#         for marking in sec.surface_markings:
+#             render_surface_markings.draw(ctx, marking)
+
+#     sha_256 = hashlib.sha256()
+#     sha_256.update(surface.get_data())
+#     hash = sha_256.hexdigest()
+
+#     self.id = f"tile-{hash}"
+
+#     dir = os.path.join(roads_path, self.road_folder_name, self.id)
+#     if not os.path.exists(dir):
+#         try:
+#             os.makedirs(dir)
+#         except OSError as exc:  # Guard against race condition
+#             if exc.errno != errno.EEXIST:
+#                 raise
+
+#     surface.write_to_png(os.path.join(dir, self.id + ".png"))
+
+#     with open(os.path.join(dir, self.id + ".material"), "w+") as file:
+#         file.write(self.get_material_string())
 
 
 def main():

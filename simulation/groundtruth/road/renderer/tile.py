@@ -6,9 +6,8 @@ from typing import Dict, Tuple
 
 import cairo
 
-import simulation.groundtruth.road.renderer.surface_markings as render_surface_markings
-import simulation.groundtruth.road.renderer.utils as utils
 from simulation.groundtruth.geometry import Polygon, Transform, Vector
+from simulation.groundtruth.road.renderer import surface_markings, utils
 from simulation.groundtruth.road.sections.road_section import RoadSection
 
 
@@ -180,7 +179,7 @@ class Tile:
                 # print("LINE1234: ", line)
                 utils.draw_line(ctx, line)
             for marking in sec.surface_markings:
-                render_surface_markings.draw(ctx, marking)
+                surface_marking.draw(ctx, marking)
 
         sha_256 = hashlib.sha256()
         sha_256.update(surface.get_data())
