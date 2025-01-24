@@ -394,7 +394,7 @@
     </link>
 
     <link name="camera_link">
-      <pose>-0.090 0 0.250 0 0.610865 0</pose>
+      <pose>-0.090 0 0.250 0 0.436332 0</pose>
       <inertial>
         <mass>0.1</mass>
         <inertia>
@@ -422,7 +422,7 @@
           <specular>0.0 0.0 1.0 1</specular>
         </material>
       </visual>
-      <sensor name="camera" type="camera">
+      <sensor name="camera" type="wideanglecamera">
         <camera>
           <horizontal_fov>1.858</horizontal_fov>
           <image>
@@ -430,9 +430,13 @@
             <height>1544</height>
           </image>
           <clip>
-            <near>0.1</near>
+            <near>0.0001</near>
             <far>100</far>
           </clip>
+          <lens>
+            <type>orthographic</type>
+            <scale_to_hfov>true</scale_to_hfov>
+          </lens>
         </camera>
         <always_on>1</always_on>
         <update_rate>30</update_rate>

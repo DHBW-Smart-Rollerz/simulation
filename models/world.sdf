@@ -29,7 +29,7 @@
     <plugin
       filename="gz-sim-sensors-system"
       name="gz::sim::systems::Sensors">
-      <render_engine>ogre2</render_engine>
+      <render_engine>ogre</render_engine>
     </plugin>
 
     <light type="directional" name="sun">
@@ -81,7 +81,7 @@
             <specular>0.2 0.2 0.2 1</specular>
             <pbr>
               <metal>
-                <albedo_map>default_road.png</albedo_map>
+                <albedo_map>model://models/roads/default_road/default_road.png</albedo_map>
                 <roughness>0.8</roughness>
               </metal>
             </pbr>

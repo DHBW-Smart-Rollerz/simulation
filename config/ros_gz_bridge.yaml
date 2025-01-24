@@ -30,12 +30,12 @@
   gz_type_name: "gz.msgs.Odometry"
   direction: BIDIRECTIONAL
 
-- ros_topic_name: "/camera/image_raw"
+- ros_topic_name: "/camera/image/raw"
   gz_topic_name: "/camera"
   ros_type_name: "sensor_msgs/msg/Image"
   gz_type_name: "gz.msgs.Image"
   direction: GZ_TO_ROS
-- ros_topic_name: "/camera/camera_info"
+- ros_topic_name: "/camera/camera/info"
   gz_topic_name: "/camera_info"
   ros_type_name: "sensor_msgs/msg/CameraInfo"
   gz_type_name: "gz.msgs.CameraInfo"

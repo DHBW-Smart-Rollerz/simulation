@@ -2,18 +2,18 @@ import importlib
 import itertools
 import os
 
-import launch
 import numpy as np
 import rclpy
 import rclpy.node
 import rclpy.qos
 import rclpy.wait_for_message
 from ament_index_python.packages import get_package_share_directory
+
+import launch
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
-
 from simulation.groundtruth.road import renderer, road
 
 
@@ -81,7 +81,7 @@ class WorldSpawner(rclpy.node.Node):
         signs.sort(key=lambda sign: sign.kind.id_)
         signs_grouped = itertools.groupby(signs, key=lambda sign: sign.kind.id_)
 
-        # Iterate through each group of signs and prepend a incrementing number to the 
+        # Iterate through each group of signs and prepend a incrementing number to the
         # name to avoid name collisions
         for _, sign_group in signs_grouped:
             for idx, sign in enumerate(sign_group):
