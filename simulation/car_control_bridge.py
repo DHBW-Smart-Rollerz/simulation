@@ -53,7 +53,7 @@ class CarControlBridge(rclpy.node.Node):
     def init_publisher_and_subscriber(self):
         """Initializes the subscribers and publishers."""
         self.steering_angle_subscriber = self.create_subscription(
-            std_msgs.msg.Float32,
+            std_msgs.msg.Int16,
             self.steering_topic,
             self.steering_angle_callback,
             qos_profile=1,
@@ -71,14 +71,14 @@ class CarControlBridge(rclpy.node.Node):
             qos_profile=10,
         )
 
-    def steering_angle_callback(self, msg: std_msgs.msg.Float32):
+    def steering_angle_callback(self, msg: std_msgs.msg.Int16):
         """
         Callback function for the steering angle subscriber.
 
         Arguments:
             msg -- The received message.
         """
-        self.steering_angle = msg.data
+        self.steering_angle = float(msg.data)
 
     def velocity_callback(self, msg: std_msgs.msg.Float32):
         """

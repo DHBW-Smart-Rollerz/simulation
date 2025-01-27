@@ -5,7 +5,7 @@ robot_description_publisher:
 
 car_control_bridge:
   ros__parameters:
-    steering_topic: "/control/steering/target"
+    steering_topic: "/control/steering_angle/target"
     velocity_topic: "/control/velocity/target"
     car_control_topic: "/smarty/cmd_vel"
     publish_frequency: 10
