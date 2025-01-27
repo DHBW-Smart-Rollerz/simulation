@@ -1,12 +1,8 @@
-import itertools
-from collections import defaultdict
-
-import cairo
+import numpy as np
 
 from simulation.groundtruth.geometry import Vector
 from simulation.groundtruth.road.renderer.tile import Tile
 from simulation.groundtruth.road.road import Road
-
 
 # def render_to_file(self, roads_path: str):
 #     """Render an image of the tile and save it to a file.
@@ -73,15 +69,15 @@ def main():
     pass
 
     road = default_road()
-    tile_size = Vector(15, 15)
-    tile_resolution = Vector(7 * 512, 7 * 512)
+    tile_size = Vector(2, 2)
+    tile_resolution = Vector(512, 512)
 
     tiles: list[Tile] = create_new_tiles(road, tile_size, tile_resolution)
 
-    for tile in tiles:
-        tile.render_to_file(
-            "/home/smartrollerz/Smartrollerz/smarty_workspace/src/simulation/config/default_road"
-        )
+    # for tile in tiles:
+    #     tile.render_to_file(
+    #         "/home/smartrollerz/Smartrollerz/smarty_workspace/src/simulation/config/default_road"
+    #     )
 
 
 def create_new_tiles(
@@ -91,37 +87,42 @@ def create_new_tiles(
 ) -> list[Tile]:
     sections = road.sections
 
-    active_tiles: defaultdict[tuple[int, int], set[int]] = defaultdict(set)
+    min_x = 0.0
+    min_y = 0.0
+    max_x = 0.0
+    max_y = 0.0
 
     for sec in sections:
         box = sec.get_bounding_box()
         minx, miny, maxx, maxy = box.bounds
 
-        tiles_x = range(
-            int(minx / tile_size.x) - 2,
-            int(maxx / tile_size.x) + 2,
-        )
-        tiles_y = range(
-            int(miny / tile_size.y) - 2,
-            int(maxy / tile_size.y) + 2,
-        )
+        if minx < min_x:
+            min_x = minx
+        if miny < min_y:
+            min_y = miny
+        if maxx > max_x:
+            max_x = maxx
+        if maxy > max_y:
+            max_y = maxy
 
-        tile_keys = itertools.product(tiles_x, tiles_y)
+    print(f"{sec.TYPE}: {min_x:5.2f}/{min_y:5.2f}  {max_x:5.2f}/{max_y:5.2f}")
 
-        for key in tile_keys:
-            active_tiles[key].add(sec.id)
+    dim_x = max_x - min_x
+    dim_y = max_y - min_y
 
-    tiles = [
-        Tile(
-            key,
-            sections={sec_id: sections[sec_id] for sec_id in secs},
-            size=tile_size,
-            resolution=tile_resolution,
-            road_folder_name=f".{road._name}",
-        )
-        for key, secs in active_tiles.items()
-    ]
-    return tiles
+    size = (np.ceil(dim_x) * 2, np.ceil(dim_y) * 2)
+    resolution_meter = (128, 128)
+    tile = Tile(
+        index=(0, 0),
+        size=Vector(size[0], size[1]),
+        resolution=Vector(resolution_meter[0] * size[0], resolution_meter[1] * size[1]),
+        road_folder_name=f".{road._name}",
+        sections={section.id: section for section in sections},
+    )
+
+    tile.render_to_file(
+        "/home/smartrollerz/Smartrollerz/smarty_workspace/src/simulation/simulation/groundtruth/roadv2"
+    )
 
 
 def default_road() -> Road:

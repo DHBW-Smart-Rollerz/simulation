@@ -17,9 +17,13 @@
       </inertial>
       <visual name='visual_chassis'>
         <geometry>
-          <box>
+          <mesh>
+            <uri>model://models/smarty/smarty_sim.stl</uri>
+            <scale>0.001 0.001 0.001</scale>
+          </mesh>
+          <!-- <box>
             <size>0.370 0.125 0.120</size>
-          </box>
+          </box> -->
         </geometry>
         <material>
           <ambient>0.5 0.5 1.0 1</ambient>

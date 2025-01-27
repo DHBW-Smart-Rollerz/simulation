@@ -224,8 +224,6 @@ class Tile:
         sections = road.sections
 
         active_tiles: defaultdict[tuple[int, int], set[int]] = defaultdict(set)
-        
-
 
         for sec in sections:
             box = sec.get_bounding_box()
