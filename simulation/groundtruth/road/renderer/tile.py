@@ -1,6 +1,6 @@
-import errno
-import hashlib
+import itertools
 import os
+from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, Tuple
 
@@ -8,6 +8,7 @@ import cairo
 
 from simulation.groundtruth.geometry import Polygon, Transform, Vector
 from simulation.groundtruth.road.renderer import surface_markings, utils
+from simulation.groundtruth.road.road import Road
 from simulation.groundtruth.road.sections.road_section import RoadSection
 
 
@@ -40,10 +41,8 @@ class Tile:
     """
     sections: Dict[int, RoadSection] = field(default_factory=set)
     """All sections that are (atleast partly) on this tile."""
-    id: str = None
-    """ID of the tile.
 
-    Automatically generated when rendering."""
+    """Automatically generated when rendering."""
     already_rendered: bool = False
     """Indicate whether the tile has been rendered before."""
 
@@ -68,81 +67,85 @@ class Tile:
             * Polygon([[0, 0], [self.size.x, 0], self.size, [0, self.size.y]])
         )
 
-    def get_material_string(self) -> str:
-        """Content of the tile's material file.
-
-        See: http://gazebosim.org/tutorials?tut=color_model
-        """
-        return """material {name}
-        {{
-            technique
-            {{
-                pass
-                {{
-                    texture_unit
-                    {{
-                        texture {texture_name} PF_RGB8
-                    }}
-                }}
-            }}
-        }}""".format(
-            name=self.id, texture_name=self.id + ".png"
-        )
-
     def get_model_string(self) -> str:
         """Get a model string that can be spawned in Gazebo."""
         Tile.COUNTER += 1
         return f"""
-        <model name='{self.name + "x"+ str(Tile.COUNTER)}'>
-          <static>1</static>
-          <link name='link'>
-            <collision name='collision'>
-              <geometry>
-                <plane>
-                  <normal>0 0 1</normal>
-                  <size>{self.size.x} {self.size.y}</size>
-                </plane>
-              </geometry>
-              <surface>
-                <friction>
-                  <ode>
-                    <mu>100</mu>
-                    <mu2>50</mu2>
-                  </ode>
-                  <torsional>
-                    <ode/>
-                  </torsional>
-                </friction>
-                <contact>
-                  <ode/>
-                </contact>
-                <bounce/>
-              </surface>
-              <max_contacts>10</max_contacts>
-            </collision>
-            <visual name='visual'>
-              <cast_shadows>0</cast_shadows>
-              <geometry>
-                <plane>
-                  <normal>0 0 1</normal>
-                  <size>{self.size.x} {self.size.y}</size>
-                </plane>
-              </geometry>
-              <material>
-                <script>
-                  <uri>model://{self.road_folder_name}/{self.id}</uri>
-                  <name>{self.id}</name>
-                </script>
-              </material>
-            </visual>
-            <self_collide>0</self_collide>
-            <enable_wind>0</enable_wind>
-            <kinematic>0</kinematic>
-          </link>
-          <pose>{self.transform.translation.x} {self.transform.translation.y}
-            0 0 -0 0</pose>
-        </model>
-        """
+          <sdf version="1.8">
+          <model name="tile">
+            <static>true</static>
+            <link name="link">
+              <visual name="visual">
+                <cast_shadows>false</cast_shadows>
+                <geometry>
+                  <plane>
+                    <normal>0 0 1</normal>
+                    <size>{self.size.x} {self.size.y}</size>
+                  </plane>
+                </geometry>
+                <material>
+                  <ambient>0.8 0.8 0.8 1</ambient>
+                  <diffuse>0.8 0.8 0.8 1</diffuse>
+                  <specular>0.2 0.2 0.2 1</specular>
+                  <pbr>
+                    <metal>
+                      <albedo_map>model://models/roads/default_road/tiles/{self.name}.png</albedo_map>
+                      <roughness>0.8</roughness>
+                    </metal>
+                  </pbr>
+                </material>
+              </visual>
+            </link>
+          </model>
+          </sdf>
+          """
+        return f"""
+          <sdf version="1.8">
+          <model name="tile">
+            <static>true</static>
+            <link name="link">
+              <collision name="collision">
+                <geometry>
+                  <plane>
+                    <normal>0 0 1</normal>
+                    <size>{self.size.x} {self.size.y}</size>
+                  </plane>
+                </geometry>
+                <surface>
+                  <friction>
+                    <ode>
+                      <mu>50</mu>
+                    </ode>
+                    <bullet>
+                      <friction>1</friction>
+                      <rolling_friction>0.1</rolling_friction>
+                    </bullet>
+                  </friction>
+                </surface>
+              </collision>
+              <visual name="visual">
+                <geometry>
+                  <plane>
+                    <normal>0 0 1</normal>
+                    <size>{self.size.x} {self.size.y}</size>
+                  </plane>
+                </geometry>
+                <material>
+                  <ambient>0.8 0.8 0.8 1</ambient>
+                  <diffuse>0.8 0.8 0.8 1</diffuse>
+                  <specular>0.2 0.2 0.2 1</specular>
+                  <pbr>
+                    <metal>
+                      <albedo_map>model://models/roads/default_road/tiles/{self.name}.png</albedo_map>
+                      <roughness>0.8</roughness>
+                    </metal>
+                  </pbr>
+                </material>
+              </visual>
+            </link>
+          </model>
+          </sdf>
+          """
 
     def render_to_file(self, roads_path: str):
         """Render an image of the tile and save it to a file.
@@ -176,26 +179,80 @@ class Tile:
         # Draw lines for all sections
         for sec in self.sections.values():
             for line in sec.lines:
-                # print("LINE1234: ", line)
                 utils.draw_line(ctx, line)
             for marking in sec.surface_markings:
-                surface_marking.draw(ctx, marking)
+                surface_markings.draw(ctx, marking)
 
-        sha_256 = hashlib.sha256()
-        sha_256.update(surface.get_data())
-        hash = sha_256.hexdigest()
+        dir = os.path.join(roads_path)
+        os.makedirs(dir, exist_ok=True)
 
-        self.id = f"tile-{hash}"
+        surface.write_to_png(os.path.join(dir, f"{self.name}.png"))
 
-        dir = os.path.join(roads_path, self.road_folder_name, self.id)
-        if not os.path.exists(dir):
-            try:
-                os.makedirs(dir)
-            except OSError as exc:  # Guard against race condition
-                if exc.errno != errno.EEXIST:
-                    raise
+    @staticmethod
+    def load_tiles_from_folder(
+        folder: str,
+        tile_size: Vector,
+        tile_resolution: Vector,
+    ) -> list["Tile"]:
+        """Load all tiles from a folder.
 
-        surface.write_to_png(os.path.join(dir, self.id + ".png"))
+        Args:
+            folder: Folder in which the tiles are located.
+        """
+        tiles = []
+        for file in os.listdir(folder):
+            if file.endswith(".png"):
+                name = file.split(".")[0]
+                x, y = name.split("_")[1].split("x")
+                tiles.append(
+                    Tile(
+                        index=(int(x), int(y)),
+                        size=tile_size,
+                        resolution=tile_resolution,
+                        road_folder_name=folder,
+                        already_rendered=True,
+                    )
+                )
+        return tiles
 
-        with open(os.path.join(dir, self.id + ".material"), "w+") as file:
-            file.write(self.get_material_string())
+    @staticmethod
+    def create_new_tiles(
+        road: Road,
+        tile_size: Vector,
+        tile_resolution: Vector,
+    ) -> list["Tile"]:
+        sections = road.sections
+
+        active_tiles: defaultdict[tuple[int, int], set[int]] = defaultdict(set)
+        
+
+
+        for sec in sections:
+            box = sec.get_bounding_box()
+            minx, miny, maxx, maxy = box.bounds
+
+            tiles_x = range(
+                int(minx / tile_size.x) - 2,
+                int(maxx / tile_size.x) + 2,
+            )
+            tiles_y = range(
+                int(miny / tile_size.y) - 2,
+                int(maxy / tile_size.y) + 2,
+            )
+
+            tile_keys = itertools.product(tiles_x, tiles_y)
+
+            for key in tile_keys:
+                active_tiles[key].add(sec.id)
+
+        tiles = [
+            Tile(
+                key,
+                sections={sec_id: sections[sec_id] for sec_id in secs},
+                size=tile_size,
+                resolution=tile_resolution,
+                road_folder_name=f".{road._name}",
+            )
+            for key, secs in active_tiles.items()
+        ]
+        return tiles

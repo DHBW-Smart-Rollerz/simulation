@@ -14,7 +14,9 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
+from simulation.groundtruth.geometry.vector import Vector
 from simulation.groundtruth.road import renderer, road
+from simulation.groundtruth.road.renderer.tile import Tile
 
 
 class WorldSpawner(rclpy.node.Node):
@@ -33,9 +35,12 @@ class WorldSpawner(rclpy.node.Node):
         self.get_logger().info("WorldSpawner node initialized")
 
         self.world_name = "smartrollerz"  # TODO
+        self.tile_size = Vector(2, 2)
+        self.tile_resolution = Vector(512, 512)
 
         self.road = self.load_road(self.road_path)
         self.spawn_road_signs()
+        # self.spawn_tiles()
 
     def load_ros_params(self):
         """Gets the parameters from the ROS parameter server."""
@@ -72,6 +77,35 @@ class WorldSpawner(rclpy.node.Node):
             raise AttributeError("The provided road does not contain a 'road' object.")
 
         return road
+
+    def spawn_tiles(self):
+        tiles_folder = os.path.join(
+            # "/home/smartrollerz/Smartrollerz/smarty_workspace/src/simulation",
+            self.package_share_path,
+            "models/roads/default_road/tiles",
+        )
+
+        if os.path.exists(tiles_folder):
+            tiles = Tile.load_tiles_from_folder(
+                tiles_folder, self.tile_size, self.tile_resolution
+            )
+        else:
+            tiles = Tile.create_new_tiles(
+                self.road, self.tile_size, self.tile_resolution
+            )
+            for tile in tiles:
+                tile.render_to_file(tiles_folder)
+
+        for tile in tiles:
+            xml = tile.get_model_string()
+            self.spawn_model(
+                model=xml,
+                name=tile.name,
+                position=np.asarray(
+                    [tile.transform.translation.x, tile.transform.translation.y, 0.0]
+                ),
+                orientation=np.asarray([0.0, 0.0, 0.0]),
+            )
 
     def spawn_road_signs(self):
         # Get signs from the road sections and flatten the list with the sum() function
