@@ -27,7 +27,7 @@ def generate_sdf_model(
                 <cast_shadows>1</cast_shadows>
                 <geometry>
                     <mesh>
-                        <uri>model://models/meshes/{mesh}.dae</uri>
+                        <uri>package://models/meshes/{mesh}.dae</uri>
                         <scale>1 1 1</scale>
                     </mesh>
                 </geometry>

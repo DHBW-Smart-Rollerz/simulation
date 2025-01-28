@@ -2,18 +2,18 @@ import importlib
 import itertools
 import os
 
+import launch
 import numpy as np
 import rclpy
 import rclpy.node
 import rclpy.qos
 import rclpy.wait_for_message
 from ament_index_python.packages import get_package_share_directory
-
-import launch
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
+
 from simulation.groundtruth.geometry.vector import Vector
 from simulation.groundtruth.road import renderer, road
 from simulation.groundtruth.road.renderer.tile import Tile

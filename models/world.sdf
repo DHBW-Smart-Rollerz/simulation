@@ -81,7 +81,7 @@
             <specular>0.2 0.2 0.2 1</specular>
             <pbr>
               <metal>
-                <albedo_map>model://models/roads/default_road/default_road.png</albedo_map>
+                <albedo_map>package://models/roads/default_road/default_road.png</albedo_map>
                 <roughness>0.8</roughness>
               </metal>
             </pbr>
@@ -95,7 +95,7 @@
       <pose>0 0 0 0 0 0</pose>
 
       <include merge="true">
-        <uri>model://models/smarty</uri>
+        <uri>package://models/smarty</uri>
       </include>
 
       <!-- Publishes the poses of the models links to /model/{model_name}/pose. Static

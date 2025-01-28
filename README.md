@@ -8,6 +8,11 @@ This repository contains the simulation package for smarty.
 
 This package has currently under developement and is not functioning yet.
 
+
+## INstallation
+
+`sudo apt-get install libcairo2-dev`
+
 ## Structure
 
 - `config/`: All configurations (most of the time yaml files)

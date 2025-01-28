@@ -89,54 +89,7 @@ class Tile:
                   <specular>0.2 0.2 0.2 1</specular>
                   <pbr>
                     <metal>
-                      <albedo_map>model://models/roads/default_road/tiles/{self.name}.png</albedo_map>
-                      <roughness>0.8</roughness>
-                    </metal>
-                  </pbr>
-                </material>
-              </visual>
-            </link>
-          </model>
-          </sdf>
-          """
-        return f"""
-          <sdf version="1.8">
-          <model name="tile">
-            <static>true</static>
-            <link name="link">
-              <collision name="collision">
-                <geometry>
-                  <plane>
-                    <normal>0 0 1</normal>
-                    <size>{self.size.x} {self.size.y}</size>
-                  </plane>
-                </geometry>
-                <surface>
-                  <friction>
-                    <ode>
-                      <mu>50</mu>
-                    </ode>
-                    <bullet>
-                      <friction>1</friction>
-                      <rolling_friction>0.1</rolling_friction>
-                    </bullet>
-                  </friction>
-                </surface>
-              </collision>
-              <visual name="visual">
-                <geometry>
-                  <plane>
-                    <normal>0 0 1</normal>
-                    <size>{self.size.x} {self.size.y}</size>
-                  </plane>
-                </geometry>
-                <material>
-                  <ambient>0.8 0.8 0.8 1</ambient>
-                  <diffuse>0.8 0.8 0.8 1</diffuse>
-                  <specular>0.2 0.2 0.2 1</specular>
-                  <pbr>
-                    <metal>
-                      <albedo_map>model://models/roads/default_road/tiles/{self.name}.png</albedo_map>
+                      <albedo_map>package://models/roads/default_road/tiles/{self.name}.png</albedo_map>
                       <roughness>0.8</roughness>
                     </metal>
                   </pbr>

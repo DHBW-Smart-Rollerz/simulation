@@ -79,6 +79,9 @@ class RobotDescriptionPublisher(rclpy.node.Node):
             self.get_logger().error(f"Model file not found: {model_path}")
             return
 
+        # Inlcude the package folder in the paths to files so that rviz can find them
+        model_xml = model_xml.replace("package://", "package://simulation/")
+
         msg = std_msgs.msg.String(data=model_xml)
         self.robot_description_publisher.publish(msg)
         self.get_logger().info(
