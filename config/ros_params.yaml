@@ -12,4 +12,4 @@ car_control_bridge:
 
 world_spawner:
   ros__parameters:
-    road: "models/roads/lab_road"
+    road: "models/roads/default_road"

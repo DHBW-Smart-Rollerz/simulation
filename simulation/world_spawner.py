@@ -13,7 +13,6 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 
-from simulation.groundtruth.geometry.vector import Vector
 from simulation.groundtruth.road import renderer, road
 
 
