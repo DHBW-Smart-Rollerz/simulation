@@ -90,6 +90,9 @@ def generate_launch_description():
                 package="simulation",
                 executable="world_spawner",
                 name="world_spawner",
+                parameters=[
+                    params_file,
+                ],
             ),
             Node(
                 package="rviz2",

@@ -8,4 +8,8 @@ car_control_bridge:
     steering_topic: "/control/steering_angle/target"
     velocity_topic: "/control/velocity/target"
     car_control_topic: "/smarty/cmd_vel"
-    publish_frequency: 10
+    publish_frequency: 200
+
+world_spawner:
+  ros__parameters:
+    road: "models/roads/lab_road"

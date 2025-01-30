@@ -10,7 +10,11 @@ import random
 from dataclasses import dataclass, field
 from typing import List, Tuple
 
+import cairo
+
 from simulation.groundtruth.geometry import Pose, Transform
+from simulation.groundtruth.geometry.vector import Vector
+from simulation.groundtruth.road.renderer import surface_markings, utils
 from simulation.groundtruth.road.sections.road_section import RoadSection
 
 
@@ -28,6 +32,10 @@ class Road:
     The name attribute is determined by the name of the file.
     It is filled in when the road is generated.
     """
+
+    _file_path: str = field(default=None, init=False)
+    """The file path of the road definition.    """
+
     _seed: str = field(default=None, init=False)
     """Seed used when generating the road.
 
@@ -91,36 +99,90 @@ class Road:
         )
         self.append(section)
 
+    def render_to_file(self, path: str, padding: float = 2.0) -> Vector:
+        """Render an image of the road and save it to a file.
 
-DEFAULT_ROAD_DIR = os.path.join(
-    "/home/smartrollerz/Smartrollerz/smarty_workspace/src/simulation/config/default_road"
-)
+        Args:
+            path: Path to the folder where the road should be rendered.
+        """
+        min_x, min_y, max_x, max_y = 0.0, 0.0, 0.0, 0.0
+        for sec in self.sections:
+            minx, miny, maxx, maxy = sec.get_bounding_box().bounds
+            min_x, min_y = min(min_x, minx), min(min_y, miny)
+            max_x, max_y = max(max_x, maxx), max(max_y, maxy)
+
+        dim_x = max(abs(min_x), abs(max_x))
+        dim_y = max(abs(min_y), abs(max_y))
+
+        print(f"Road: {dim_x:5.2f}/{dim_y:5.2f}")
+        print(f"Road: {min_x:5.2f}/{min_y:5.2f}  {max_x:5.2f}/{max_y:5.2f}")
+
+        size = Vector((dim_x + padding) * 2, (dim_y + padding) * 2)
+        resolution_per_meter = Vector(512, 512)
+        resolution = Vector(
+            resolution_per_meter.x * size.x,
+            resolution_per_meter.y * size.y,
+        )
+
+        surface = cairo.ImageSurface(
+            cairo.FORMAT_RGB24, int(resolution.x), int(resolution.y)
+        )
+        ctx = cairo.Context(surface)
+
+        # Adjust scale
+        ctx.scale(resolution.x / size.x, resolution.y / size.y)
+        # Inverse y-axis
+        ctx.translate(0, size.y / 2)
+        ctx.scale(1, -1)
+        ctx.translate(0, -size.y / 2)
+
+        # Move to center of the tile
+        ctx.translate(size.x / 2, size.y / 2)
+
+        # Create black background
+        ctx.set_source_rgb(0, 0, 0)
+        ctx.rectangle(0, 0, size.x, size.y)
+        ctx.fill()
+
+        # Draw lines for all sections
+        for sec in self.sections:
+            for line in sec.lines:
+                utils.draw_line(ctx, line)
+            for marking in sec.surface_markings:
+                surface_markings.draw(ctx, marking)
+
+        dir = os.path.join(path)
+        os.makedirs(dir, exist_ok=True)
+
+        surface.write_to_png(os.path.join(dir, f"{self._name}.png"))
+
+        return size
 
 
-def _get_module(name: str):
-    if not os.path.isabs(name):
-        name = os.path.join(DEFAULT_ROAD_DIR, name)
-
-    if not name.endswith(".py"):
-        name += ".py"
-
-    # Remove .py
-    module_name = os.path.basename(name)[:-3]
+def _import_road_module(path: str) -> Tuple[Road, str, str]:
+    module_name = os.path.basename(path.rstrip(".py"))
 
     try:
-        spec = importlib.util.spec_from_file_location(module_name, name)
+        spec = importlib.util.spec_from_file_location(module_name, path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-        return module, name, module_name
-    except AttributeError or ModuleNotFoundError:
-        raise ValueError(f"Road {module_name} not found at {name}.")
+    except ImportError as e:
+        raise ImportError(f"Could not import road from {path}: {e}")
+
+    try:
+        road = getattr(module, "road")
+    except AttributeError:
+        raise AttributeError("The provided road does not contain a 'road' object.")
+
+    return road, path, module_name
 
 
-def load(road_name: str, seed: str = "KITCAR") -> Road:
-    """Load road object from file.
+def load(road_path: str, seed: str = "smartrollerz") -> Road:
+    """
+    Load a road from a python file.
 
     Args:
-        road_name: Name of the file containing the road definition.
+        road_path: Path to the python file containing the road.
         seed: Predetermine random values.
     """
 
@@ -130,11 +192,10 @@ def load(road_name: str, seed: str = "KITCAR") -> Road:
     random.seed(seed)
 
     # Ensure that the road is up to date
-    road_module, file_path, road_name = _get_module(road_name)
+    road, file_path, road_name = _import_road_module(road_path)
 
-    road = road_module.road
     road._file_path = file_path
     road._name = road_name
     road._seed = seed
 
-    return road_module.road
+    return road

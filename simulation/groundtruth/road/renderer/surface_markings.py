@@ -3,6 +3,7 @@ import os
 from typing import List
 
 import cairo
+from ament_index_python import get_package_share_directory
 from cairo import Context
 
 from simulation.groundtruth.geometry import Line, Point, Polygon, Vector
@@ -29,7 +30,8 @@ def draw(ctx, surface_marking: SurfaceMarking):
         # Then rotate by 90 degrees to align png properly!
         ctx.rotate(math.pi / 2)
         image_file = os.path.join(
-            "/home/smartrollerz/Smartrollerz/smarty_workspace/src/simulation/models/meshes",
+            get_package_share_directory("simulation"),
+            "models/meshes",
             "surface_marking_turn_"
             + (
                 "left"

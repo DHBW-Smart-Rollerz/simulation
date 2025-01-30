@@ -53,7 +53,7 @@
           <geometry>
             <plane>
               <normal>0 0 1</normal>
-              <size>20 20</size>
+              <size>100 100</size>
             </plane>
           </geometry>
           <surface>
@@ -68,25 +68,6 @@
             </friction>
           </surface>
         </collision>
-        <visual name="visual">
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>20 20</size>
-            </plane>
-          </geometry>
-          <material>
-            <ambient>0.8 0.8 0.8 1</ambient>
-            <diffuse>0.8 0.8 0.8 1</diffuse>
-            <specular>0.2 0.2 0.2 1</specular>
-            <pbr>
-              <metal>
-                <albedo_map>package://models/roads/default_road/default_road.png</albedo_map>
-                <roughness>0.8</roughness>
-              </metal>
-            </pbr>
-          </material>
-        </visual>
       </link>
     </model>
 
