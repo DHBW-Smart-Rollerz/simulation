@@ -1,1 +1,8 @@
 rclpy
+pyquaternion
+pytest
+pyyaml
+scipy
+shapely
+numpy
+pycairo
