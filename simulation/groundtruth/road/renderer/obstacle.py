@@ -1,77 +1,55 @@
-def draw(name, obst):
-    return obstacle_model(
-        name,
-        obst.center.x,
-        obst.center.y,
-        obst.depth,
-        obst.width,
-        obst.height,
-        obst.orientation,
-    )
+import numpy as np
 
 
-# large masses make model instable
-def obstacle_model(name, x, y, length, width, height, orientation):
+def generate_sdf_model(obstacle_size: np.ndarray):
+    """Generates an SDF string for a obstacle model.
+
+    Args:
+        obstacle_size (np.ndarray): The size of the obstacle as a numpy array [x, y, z].
+
+    Returns:
+        str: The generated SDF string.
+    """
     return """
-    <model name='{name}'>
-      <pose>{x} {y} {z} 0 0 {orientation}</pose>
-      <link name='link'>
-        <inertial>
-          <mass>1</mass>
-          <inertia>
-            <ixx>0.166667</ixx>
-            <ixy>0</ixy>
-            <ixz>0</ixz>
-            <iyy>0.166667</iyy>
-            <iyz>0</iyz>
-            <izz>0.166667</izz>
-          </inertia>
-        </inertial>
-        <collision name='collision'>
-          <geometry>
-            <box>
-              <size>{length} {width} {height}</size>
-            </box>
-          </geometry>
-          <max_contacts>10</max_contacts>
-          <surface>
-            <contact>
-              <ode/>
-            </contact>
-            <bounce/>
-            <friction>
-              <torsional>
-                <ode/>
-              </torsional>
-              <ode/>
-            </friction>
-          </surface>
-        </collision>
-        <visual name='visual'>
-          <geometry>
-            <box>
-              <size>{length} {width} {height}</size>
-            </box>
-          </geometry>
-          <material>
-            <script>
-              <name>Gazebo/White</name>
-              <uri>file://media/materials/scripts/gazebo.material</uri>
-            </script>
-          </material>
-        </visual>
-        <self_collide>0</self_collide>
-        <enable_wind>0</enable_wind>
-        <kinematic>0</kinematic>
-      </link>
-    </model>
-    """.format(
-        name=name,
-        x=x,
-        y=y,
-        z=height / 2 + 0.1,
-        length=length,
-        width=width,
-        height=height,
-        orientation=orientation,
+        <sdf version="1.8">
+        <model name='model'>
+            <link name='link'>
+                <inertial>
+                    <mass>1</mass>
+                    <inertia>
+                        <ixx>0.166667</ixx>
+                        <ixy>0</ixy>
+                        <ixz>0</ixz>
+                        <iyy>0.166667</iyy>
+                        <iyz>0</iyz>
+                        <izz>0.166667</izz>
+                    </inertia>
+                </inertial>
+                <visual name='visual'>
+                    <cast_shadows>1</cast_shadows>
+                    <geometry>
+                        <box>
+                            <size>{size_x} {size_y} {size_z}</size>
+                        </box>
+                    </geometry>
+                    <material>
+                        <ambient>0.95 0.95 0.95 1</ambient>
+                        <diffuse>0.95 0.95 0.95 1</diffuse>
+                        <specular>0.95 0.95 0.95 1</specular>
+                    </material>
+                </visual>
+                <collision name='collision'>
+                    <geometry>
+                        <box>
+                          <size>{size_x} {size_y} {size_z}</size>
+                        </box>
+                    </geometry>
+                </collision>
+            </link>
+        </model>
+        </sdf>
+        """.format(
+        size_x=obstacle_size[0],
+        size_y=obstacle_size[1],
+        size_z=obstacle_size[2],
     )

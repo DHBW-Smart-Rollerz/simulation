@@ -24,13 +24,13 @@ def generate_sdf_model(
             <static>1</static>
             <link name='link'>
                 <visual name='visual'>
-                <cast_shadows>1</cast_shadows>
-                <geometry>
-                    <mesh>
-                        <uri>package://models/meshes/{mesh}.dae</uri>
-                        <scale>1 1 1</scale>
-                    </mesh>
-                </geometry>
+                    <cast_shadows>1</cast_shadows>
+                    <geometry>
+                        <mesh>
+                            <uri>package://models/meshes/{mesh}.dae</uri>
+                            <scale>1 1 1</scale>
+                        </mesh>
+                    </geometry>
                 </visual>
                 <collision name='collision'>
                     <pose>{box_position_x} {box_position_y} {box_position_z} 0 0 0</pose>

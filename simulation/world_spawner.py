@@ -36,6 +36,7 @@ class WorldSpawner(rclpy.node.Node):
         self.road = road.load(self.road_path)
         self.spawn_road()
         self.spawn_road_signs()
+        self.spawn_obstacles()
 
     def load_ros_params(self):
         """Gets the parameters from the ROS parameter server."""
@@ -54,7 +55,6 @@ class WorldSpawner(rclpy.node.Node):
 
     def spawn_road(self):
         """Spawns the road in the gazebo simulation."""
-
         dir = os.path.dirname(self.road_path)
         size = self.road.render_to_file(dir)
         image_path = os.path.join(
@@ -101,7 +101,6 @@ class WorldSpawner(rclpy.node.Node):
 
     def spawn_road_signs(self):
         """Spawns the road signs in the gazebo simulation."""
-
         # Get signs from the road sections and flatten the list with the sum() function
         signs = sum([section.traffic_signs for section in self.road.sections], [])
 
@@ -126,6 +125,27 @@ class WorldSpawner(rclpy.node.Node):
                     orientation=np.asarray([0.0, 0.0, sign.orientation]),
                 )
 
+    def spawn_obstacles(self):
+        """Spawns the obstacles in the gazebo simulation."""
+        # Get obstacles from the road sections and flatten the list with sum() function
+        obstacles = sum([section.obstacles for section in self.road.sections], [])
+
+        for idx, obstacle in enumerate(obstacles):
+            name = f"obstacle_{idx}"
+            xml = renderer.obstacle.generate_sdf_model(
+                obstacle_size=np.array(
+                    [obstacle.depth, obstacle.width, obstacle.height]
+                ),
+            )
+            self.spawn_model(
+                model=xml,
+                name=name,
+                position=np.asarray(
+                    [obstacle.center.x, obstacle.center.y, obstacle.height / 2]
+                ),
+                orientation=np.asarray([0.0, 0.0, obstacle.orientation]),
+            )
+
     def spawn_model(
         self,
         model: str,
@@ -142,7 +162,6 @@ class WorldSpawner(rclpy.node.Node):
             position: A numpy array [x, y, z] representing the position.
             orientation: A numpy array [roll, pitch, yaw] representing the orientation.
         """
-
         self.get_logger().info(f"Spawning {name}")
         gz_spawn_model_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
