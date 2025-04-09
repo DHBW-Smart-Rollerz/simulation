@@ -20,6 +20,7 @@ def generate_launch_description():
     Returns:
         LaunchDescription -- The launch description.
     """
+    python_executable = os.getenv("PYTHON_EXECUTABLE", "/usr/bin/python3")
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
     pkg_simulation = get_package_share_directory("simulation")
 
@@ -93,6 +94,7 @@ def generate_launch_description():
                 parameters=[
                     params_file,
                 ],
+                prefix=[python_executable],
             ),
             Node(
                 package="rviz2",
