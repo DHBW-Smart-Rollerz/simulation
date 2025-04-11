@@ -55,6 +55,21 @@ At the bottom right of the 3D scene you can see a percentage. If you can't see i
 1. Define new road layouts by creating models within the `models/roads` directory. You can take a look at the default road to get some ideas on how to create a new road.
 2. Update the `ros_params.yaml` configuration file located in the `config/` directory to specify the newly created road model you want to use.
 
+### Keyboard control
+
+Basic keyboard control is available for manually driving the Smarty vehicle and can be activated with the `keyboard_control` launch parameter.
+
+```bash
+    ros2 launch simulation simulation.launch.py keyboard_control:=true
+``` 
+
+* **W / Up Arrow:** Increase forward speed or decrease reverse speed. The vehicle maintains the set speed.
+* **S / Down Arrow:** Decrease forward speed or increase reverse speed. The vehicle maintains the set speed.
+* **A / Left Arrow:** Steer left.
+* **D / Right Arrow:** Steer right.
+
+This provides simple manual driving capabilities. Note that this node publishes commands directly to the vehicle's velocity and steering topics, which **will interfere** with autonomous lateral and longitudinal controllers if they are active simultaneously. Only use one control method at a time.
+
 ## Structure
 
 - `config/`: ROS Node parameters, RViz config and Mapping config between ROS and Gazebo

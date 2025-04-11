@@ -34,6 +34,11 @@ def generate_launch_description():
                 description="Open RViz.",
             ),
             DeclareLaunchArgument(
+                "keyboard_control",
+                default_value="false",
+                description="Activate keyboard control.",
+            ),
+            DeclareLaunchArgument(
                 "params_file",
                 default_value=os.path.join(
                     get_package_share_directory("simulation"),
@@ -51,10 +56,15 @@ def generate_launch_description():
                     os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py"),
                 ),
                 launch_arguments={
-                    "gz_args": PathJoinSubstitution(
-                        [pkg_simulation, "models", "world.sdf"]
-                    ),
-                    "on_exit_shutdown": "True",
+                    "gz_args": [
+                        PathJoinSubstitution([pkg_simulation, "models", "world.sdf"]),
+                        " --gui-config ",
+                        PathJoinSubstitution(
+                            [pkg_simulation, "config", "gazebo_gui.config"]
+                        ),
+                        " -r ",
+                    ],
+                    "on_exit_shutdown": "true",
                 }.items(),
             ),
             Node(
@@ -95,6 +105,15 @@ def generate_launch_description():
                     params_file,
                 ],
                 prefix=[python_executable],
+            ),
+            Node(
+                package="simulation",
+                executable="keyboard_control",
+                name="keyboard_control",
+                parameters=[
+                    params_file,
+                ],
+                condition=IfCondition(LaunchConfiguration("keyboard_control")),
             ),
             Node(
                 package="rviz2",

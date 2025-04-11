@@ -37,6 +37,7 @@ setup(
             f"robot_description_publisher = {package_name}.robot_description_publisher:main",
             f"car_control_bridge = {package_name}.car_control_bridge:main",
             f"world_spawner = {package_name}.world_spawner:main",
+            f"keyboard_control = {package_name}.keyboard_control:main",
         ],
     },
 )
