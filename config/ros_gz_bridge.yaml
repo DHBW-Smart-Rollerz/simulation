@@ -29,7 +29,17 @@
   ros_type_name: "nav_msgs/msg/Odometry"
   gz_type_name: "gz.msgs.Odometry"
   direction: BIDIRECTIONAL
+- ros_topic_name: "/smarty/odometry/ackermann"
+  gz_topic_name: "/model/smarty/odometry/ackermann"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.Odometry"
+  direction: GZ_TO_ROS
 
+- ros_topic_name: "/sensor/imu"
+  gz_topic_name: "/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
 - ros_topic_name: "/camera/image/raw"
   gz_topic_name: "/camera"
   ros_type_name: "sensor_msgs/msg/Image"

@@ -10,6 +10,11 @@ car_control_bridge:
     car_control_topic: "/smarty/cmd_vel"
     publish_frequency: 200
 
+car_sensor_bridge:
+  ros__parameters:
+    velocity_topic: "/sensor/velocity"
+    odom_topic: "/smarty/odometry/ackermann"
+
 world_spawner:
   ros__parameters:
     road: "models/roads/default_road"

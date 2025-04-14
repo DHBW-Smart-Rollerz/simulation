@@ -39,14 +39,14 @@ class CarControlBridge(rclpy.node.Node):
             namespace="",
             parameters=[
                 ("steering_topic", "/control/steering/target"),
-                ("veloctiy_topic", "/control/velocity/target"),
+                ("velocity_topic", "/control/velocity/target"),
                 ("car_control_topic", "/smarty/cmd_vel"),
                 ("publish_frequency", 100),
             ],
         )
 
         self.steering_topic = self.get_parameter("steering_topic").value
-        self.veloctiy_topic = self.get_parameter("veloctiy_topic").value
+        self.velocity_topic = self.get_parameter("velocity_topic").value
         self.car_control_topic = self.get_parameter("car_control_topic").value
         self.publish_frequency = self.get_parameter("publish_frequency").value
 
@@ -60,7 +60,7 @@ class CarControlBridge(rclpy.node.Node):
         )
         self.velocity_subscriber = self.create_subscription(
             std_msgs.msg.Float32,
-            self.veloctiy_topic,
+            self.velocity_topic,
             self.velocity_callback,
             qos_profile=1,
         )
