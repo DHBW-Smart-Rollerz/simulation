@@ -106,7 +106,7 @@
       </plugin>
 
       <!-- Publishes the odometry of the models links to /model/{model_name}/odometry.
-      The odometry is the position and orientation of the frames -->
+      The odometry is the position and orientation of the frames. -->
       <plugin
         filename="gz-sim-odometry-publisher-system"
         name="gz::sim::systems::OdometryPublisher">
@@ -125,16 +125,10 @@
         <wheel_separation>0.17</wheel_separation>
         <kingpin_width>0.15</kingpin_width>
         <wheel_base>0.26</wheel_base>
-        <!-- <steering_limit>0.5</steering_limit> -->
+        <!-- <steering_limit>0.5</steering_limit> needs to be measured -->
         <wheel_radius>0.035</wheel_radius>
 
-        <!-- <min_velocity>-1.0</min_velocity>
-        <max_velocity>2.0</max_velocity>
-        <min_acceleration>-0.1</min_acceleration>
-        <max_acceleration>0.2</max_acceleration>
-        <min_jerk>-0.3</min_jerk>
-        <max_jerk>1.0</max_jerk> -->
-
+        <!-- Estimated values for an RC car. -->
         <min_velocity>-2.0</min_velocity>
         <max_velocity>15.0</max_velocity>
         <min_acceleration>-7.0</min_acceleration>
