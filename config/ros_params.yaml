@@ -22,7 +22,7 @@ world_spawner:
 keyboard_control:
   ros__parameters:
     max_steering_angle: 45
-    max_velocity: 3.0
+    max_velocity: 1.0
     steering_topic: "/control/steering_angle/target"
     velocity_topic: "/control/velocity/target"
     keypress_topic: "/gazebo/keypress"

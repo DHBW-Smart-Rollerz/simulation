@@ -24,7 +24,7 @@ class KeyboardControl(rclpy.node.Node):
         self.steering_angle = 0.0
         self.velocity = 0.0
         self.steering_angle_increment = 15.0
-        self.velocity_increment = 0.2
+        self.velocity_increment = 0.02
 
         self.key_pressed = None
         self.timer = self.create_timer(0.05, self.control_loop)
@@ -37,7 +37,7 @@ class KeyboardControl(rclpy.node.Node):
             namespace="",
             parameters=[
                 ("max_steering_angle", 45),
-                ("max_velocity", 3.0),
+                ("max_velocity", 1.0),
                 ("steering_topic", "/control/steering/target"),
                 ("velocity_topic", "/control/velocity/target"),
                 ("keypress_topic", "/gazebo/keypress"),
