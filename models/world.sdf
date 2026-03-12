@@ -100,9 +100,10 @@
         filename="gz-sim-pose-publisher-system"
         name="gz::sim::systems::PosePublisher">
         <publish_link_pose>true</publish_link_pose>
+        <update_frequency>50</update_frequency>
         <use_pose_vector_msg>true</use_pose_vector_msg>
         <static_publisher>true</static_publisher>
-        <static_update_frequency>1</static_update_frequency>
+        <static_update_frequency>50</static_update_frequency>
       </plugin>
 
       <!-- Publishes the odometry of the models links to /model/{model_name}/odometry.

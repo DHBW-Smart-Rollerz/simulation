@@ -8,8 +8,11 @@ import cairo
 
 from simulation.groundtruth.geometry import Polygon, Transform, Vector
 from simulation.groundtruth.road.renderer import surface_markings, utils
-from simulation.groundtruth.road.road import Road
 from simulation.groundtruth.road.sections.road_section import RoadSection
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from simulation.groundtruth.road.road import Road
 
 
 @dataclass
@@ -170,7 +173,7 @@ class Tile:
 
     @staticmethod
     def create_new_tiles(
-        road: Road,
+        road: "Road",
         tile_size: Vector,
         tile_resolution: Vector,
     ) -> list["Tile"]:

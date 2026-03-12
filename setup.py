@@ -39,6 +39,7 @@ setup(
             f"car_sensor_bridge = {package_name}.car_sensor_bridge:main",
             f"world_spawner = {package_name}.world_spawner:main",
             f"keyboard_control = {package_name}.keyboard_control:main",
+            f"groundtruth_labeler = {package_name}.groundtruth_labeler:main",
         ],
     },
 )

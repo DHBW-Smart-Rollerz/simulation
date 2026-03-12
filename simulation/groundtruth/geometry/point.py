@@ -35,6 +35,8 @@ class Point(Vector):
 
     @validate_and_maintain_frames
     def __sub__(self, p):
+        if type(p) is Point:
+            return Vector(super().__sub__(p))
         if type(p) is not Vector:
             raise InvalidPointOperationError(
                 "A point can only be modified by a vector."

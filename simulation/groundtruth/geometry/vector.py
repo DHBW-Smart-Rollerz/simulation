@@ -197,10 +197,10 @@ class Vector:
         return NotImplemented
 
     @validate_and_maintain_frames
-    def __eq__(self, vec: "Vector") -> bool:
-        if not self.__class__ == vec.__class__:
+    def __eq__(self, vec: "Vector"):
+        if type(vec) is not Vector:
             return NotImplemented
-        return self._point.equals_exact(vec._point)
+        return self._point.equals_exact(vec._point, tolerance=1e-5)
 
     def __repr__(self) -> str:
         return (

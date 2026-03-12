@@ -132,9 +132,9 @@ class Polygon:
         Also allow the points to be provided in the reversed order.
         """
         return self._polygon.equals_exact(
-            polygon._polygon
+            polygon._polygon, tolerance=1e-5
         ) or self._polygon.equals_exact(
-            Polygon(reversed(polygon.get_points()))._polygon
+            Polygon(reversed(polygon.get_points()))._polygon, tolerance=1e-5
         )
 
     def __repr__(self) -> str:
