@@ -166,9 +166,7 @@ class GroundtruthLabeler(Node):
         self.output_dir = self.get_parameter("output_dir").value
         self.lookahead_distance = self.get_parameter("lookahead_distance").value
         self.lookbehind_distance = self.get_parameter("lookbehind_distance").value
-        self.right_lookahead_margin = self.get_parameter(
-            "right_lookahead_margin"
-        ).value
+        self.right_lookahead_margin = self.get_parameter("right_lookahead_margin").value
         self.save_data = self.get_parameter("save_data").value
 
     def _setup_directories(self):
@@ -316,23 +314,28 @@ class GroundtruthLabeler(Node):
             self._static_tf_cache[tf_key] = trans
             return trans
         except Exception as e:
-            self.get_logger().warning(f"Static TF lookup failed ({source_frame}->{target_frame}): {e}")
+            self.get_logger().warning(
+                f"Static TF lookup failed ({source_frame}->{target_frame}): {e}"
+            )
             return None
 
     def _get_dynamic_transform(
         self, target_frame: str, source_frame: str, stamp: Time
     ) -> Optional[TransformStamped]:
-        """Lookup a dynamic transform at the exact image timestamp.
-        Waits up to 200ms for TF data to arrive. If the only issue is extrapolation
-        and the gap to the latest available pose is within the acceptable threshold
-        (50ms), falls back to that pose silently — errors that small are negligible.
+        """Lookup a dynamic transform at the image timestamp without blocking.
+
+        Blocking in the image callback can starve TF subscription processing in a
+        single-threaded executor, causing the TF buffer to fall further and further
+        behind. To avoid this feedback loop, first try an immediate exact lookup.
+        If the image is only slightly ahead of the newest TF sample, fall back to
+        the latest transform when the gap is small enough to be negligible.
         Larger gaps are dropped to avoid shift artifacts."""
         try:
             return self.tf_buffer.lookup_transform(
                 target_frame,
                 source_frame,
                 stamp,
-                timeout=rclpy.duration.Duration(seconds=0.2),
+                timeout=rclpy.duration.Duration(seconds=0.0),
             )
         except Exception as e:
             if "extrapolation into the future" not in str(e):
@@ -347,7 +350,7 @@ class GroundtruthLabeler(Node):
                     target_frame,
                     source_frame,
                     rclpy.time.Time(),
-                    timeout=rclpy.duration.Duration(seconds=0.05),
+                    timeout=rclpy.duration.Duration(seconds=0.0),
                 )
                 latest_stamp = Time.from_msg(latest.header.stamp)
                 gap_ms = (stamp.nanoseconds - latest_stamp.nanoseconds) / 1e6
@@ -373,7 +376,9 @@ class GroundtruthLabeler(Node):
 
         if self._last_end_time is not None:
             time_since_last = start_time - self._last_end_time
-            self.get_logger().info(f"Waited {time_since_last * 1000:.1f}ms for new image since last computation ended")
+            self.get_logger().info(
+                f"Waited {time_since_last * 1000:.1f}ms for new image since last computation ended"
+            )
 
         try:
             self.get_logger().info(
@@ -500,18 +505,27 @@ class GroundtruthLabeler(Node):
         if car_s is None:
             return
 
-        active_ml_s = self.ml_s[(
-            (self.ml_arr[0] - car_pos_world.x) ** 2
-            + (self.ml_arr[1] - car_pos_world.y) ** 2
-        ) <= cull_radius**2]
-        active_ll_s = self.ll_s[(
-            (self.ll_arr[0] - car_pos_world.x) ** 2
-            + (self.ll_arr[1] - car_pos_world.y) ** 2
-        ) <= cull_radius**2]
-        active_rl_s = self.rl_s[(
-            (self.rl_arr[0] - car_pos_world.x) ** 2
-            + (self.rl_arr[1] - car_pos_world.y) ** 2
-        ) <= cull_radius**2]
+        active_ml_s = self.ml_s[
+            (
+                (self.ml_arr[0] - car_pos_world.x) ** 2
+                + (self.ml_arr[1] - car_pos_world.y) ** 2
+            )
+            <= cull_radius**2
+        ]
+        active_ll_s = self.ll_s[
+            (
+                (self.ll_arr[0] - car_pos_world.x) ** 2
+                + (self.ll_arr[1] - car_pos_world.y) ** 2
+            )
+            <= cull_radius**2
+        ]
+        active_rl_s = self.rl_s[
+            (
+                (self.rl_arr[0] - car_pos_world.x) ** 2
+                + (self.rl_arr[1] - car_pos_world.y) ** 2
+            )
+            <= cull_radius**2
+        ]
 
         ml_forward = active_ml_s - car_s
         ll_forward = active_ll_s - car_s
