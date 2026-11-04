@@ -1,5 +1,6 @@
 import itertools
 import os
+import time
 
 import numpy as np
 import rclpy
@@ -12,6 +13,7 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from simulation.groundtruth.road import renderer, road
+from simulation.groundtruth.road.render_cache import render_to_file_cached
 
 
 class WorldSpawner(rclpy.node.Node):
@@ -31,10 +33,21 @@ class WorldSpawner(rclpy.node.Node):
 
         self.world_name = "smartrollerz"  # TODO
 
+        road_load_started = time.perf_counter()
         self.road = road.load(self.road_path)
+        self.get_logger().info(
+            "PERF road_load_s="
+            f"{time.perf_counter() - road_load_started:.3f}"
+        )
+
+        spawn_started = time.perf_counter()
         self.spawn_road()
         self.spawn_road_signs()
         self.spawn_obstacles()
+        self.get_logger().info(
+            "PERF all_road_entities_spawned_s="
+            f"{time.perf_counter() - spawn_started:.3f}"
+        )
 
     def load_ros_params(self):
         """Gets the parameters from the ROS parameter server."""
@@ -42,6 +55,7 @@ class WorldSpawner(rclpy.node.Node):
             namespace="",
             parameters=[
                 ("road", "models/roads/default_road"),
+                ("road_render_mode", "cached"),
             ],
         )
 
@@ -50,11 +64,34 @@ class WorldSpawner(rclpy.node.Node):
             self.get_parameter("road").value,
             "road.py",
         )
+        self.road_render_mode = self.get_parameter("road_render_mode").value
+        if self.road_render_mode not in ("cached", "legacy"):
+            raise ValueError(
+                "road_render_mode must be either 'cached' or 'legacy', "
+                f"got {self.road_render_mode!r}"
+            )
 
     def spawn_road(self):
         """Spawns the road in the gazebo simulation."""
         dir = os.path.dirname(self.road_path)
-        size = self.road.render_to_file(dir)
+        render_started = time.perf_counter()
+        if self.road_render_mode == "legacy":
+            size = self.road.render_to_file(dir)
+            cache_hit = False
+        else:
+            size, cache_hit = render_to_file_cached(
+                road=self.road,
+                output_directory=dir,
+                package_source=os.path.dirname(__file__),
+                road_source=dir,
+                seed=self.road._seed,
+            )
+        self.get_logger().info(
+            f"PERF road_render_mode={self.road_render_mode} "
+            f"road_render_cache_hit={str(cache_hit).lower()} "
+            "road_render_s="
+            f"{time.perf_counter() - render_started:.3f}"
+        )
         image_path = os.path.join(
             dir.split("/simulation/")[2],
             f"{self.road._name}.png",
@@ -161,6 +198,7 @@ class WorldSpawner(rclpy.node.Node):
             orientation: A numpy array [roll, pitch, yaw] representing the orientation.
         """
         self.get_logger().info(f"Spawning {name}")
+        spawn_started = time.perf_counter()
         gz_spawn_model_launch = IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 [
@@ -189,6 +227,10 @@ class WorldSpawner(rclpy.node.Node):
         ls = launch.LaunchService()
         ls.include_launch_description(LaunchDescription([gz_spawn_model_launch]))
         ls.run()
+        self.get_logger().info(
+            f"PERF spawn_entity={name} "
+            f"launch_service_s={time.perf_counter() - spawn_started:.3f}"
+        )
 
 
 def main(args=None):

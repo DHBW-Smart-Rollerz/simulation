@@ -48,6 +48,23 @@ def generate_launch_description():
                 ),
                 description="Path to the ROS parameters file.",
             ),
+            DeclareLaunchArgument(
+                "bridge_config_file",
+                default_value=os.path.join(
+                    get_package_share_directory("simulation"),
+                    "config",
+                    "ros_gz_bridge.yaml",
+                ),
+                description="Path to the Gazebo-ROS bridge configuration.",
+            ),
+            DeclareLaunchArgument(
+                "road_render_mode",
+                default_value="cached",
+                description=(
+                    "Road texture rendering strategy: cached or legacy "
+                    "(always render)."
+                ),
+            ),
             SetEnvironmentVariable(
                 "GZ_SIM_RESOURCE_PATH",
                 PathJoinSubstitution([pkg_simulation]),
@@ -73,9 +90,7 @@ def generate_launch_description():
                 executable="parameter_bridge",
                 parameters=[
                     {
-                        "config_file": os.path.join(
-                            pkg_simulation, "config", "ros_gz_bridge.yaml"
-                        ),
+                        "config_file": LaunchConfiguration("bridge_config_file"),
                         "qos_overrides./tf_static.publisher.durability": "transient_local",
                         "qos_overrides./tf.publisher.durability": "transient_local",
                     }
@@ -112,6 +127,9 @@ def generate_launch_description():
                 name="world_spawner",
                 parameters=[
                     params_file,
+                    {
+                        "road_render_mode": LaunchConfiguration("road_render_mode"),
+                    },
                 ],
                 prefix=[python_executable],
             ),
