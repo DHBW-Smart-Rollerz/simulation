@@ -8,8 +8,10 @@
   <license>MIT</license>
 
   <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
   <depend>timing</depend>
   <depend>setup_utils</depend>
+  <depend>ros_gz_interfaces</depend>
   <depend>ros_gz_sim</depend>
 
   <test_depend>ament_copyright</test_depend>
