@@ -65,6 +65,19 @@ def generate_launch_description():
                     "(always render)."
                 ),
             ),
+            DeclareLaunchArgument(
+                "entity_spawn_mode",
+                default_value="service",
+                description=(
+                    "Entity spawning strategy: service (batched persistent "
+                    "client) or legacy (one launch process per entity)."
+                ),
+            ),
+            DeclareLaunchArgument(
+                "spawn_concurrency",
+                default_value="4",
+                description="Maximum number of concurrent Gazebo spawn requests.",
+            ),
             SetEnvironmentVariable(
                 "GZ_SIM_RESOURCE_PATH",
                 PathJoinSubstitution([pkg_simulation]),
@@ -88,6 +101,9 @@ def generate_launch_description():
             Node(
                 package="ros_gz_bridge",
                 executable="parameter_bridge",
+                arguments=[
+                    "/world/smartrollerz/create@ros_gz_interfaces/srv/SpawnEntity",
+                ],
                 parameters=[
                     {
                         "config_file": LaunchConfiguration("bridge_config_file"),
@@ -129,6 +145,8 @@ def generate_launch_description():
                     params_file,
                     {
                         "road_render_mode": LaunchConfiguration("road_render_mode"),
+                        "entity_spawn_mode": LaunchConfiguration("entity_spawn_mode"),
+                        "spawn_concurrency": LaunchConfiguration("spawn_concurrency"),
                     },
                 ],
                 prefix=[python_executable],

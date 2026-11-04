@@ -1,4 +1,5 @@
 import itertools
+import math
 import os
 import time
 
@@ -6,6 +7,9 @@ import numpy as np
 import rclpy
 import rclpy.node
 from ament_index_python.packages import get_package_share_directory
+from geometry_msgs.msg import Pose
+from ros_gz_interfaces.msg import EntityFactory
+from ros_gz_interfaces.srv import SpawnEntity
 
 import launch
 from launch import LaunchDescription
@@ -32,6 +36,13 @@ class WorldSpawner(rclpy.node.Node):
         self.get_logger().info("WorldSpawner node initialized")
 
         self.world_name = "smartrollerz"  # TODO
+        self._spawn_client = None
+        self._queued_spawns = []
+        if self.entity_spawn_mode == "service":
+            self._spawn_client = self.create_client(
+                SpawnEntity,
+                f"/world/{self.world_name}/create",
+            )
 
         road_load_started = time.perf_counter()
         self.road = road.load(self.road_path)
@@ -42,8 +53,12 @@ class WorldSpawner(rclpy.node.Node):
 
         spawn_started = time.perf_counter()
         self.spawn_road()
+        if self.entity_spawn_mode == "service":
+            self.spawn_queued_models()
         self.spawn_road_signs()
         self.spawn_obstacles()
+        if self.entity_spawn_mode == "service":
+            self.spawn_queued_models()
         self.get_logger().info(
             "PERF all_road_entities_spawned_s="
             f"{time.perf_counter() - spawn_started:.3f}"
@@ -56,6 +71,8 @@ class WorldSpawner(rclpy.node.Node):
             parameters=[
                 ("road", "models/roads/default_road"),
                 ("road_render_mode", "cached"),
+                ("entity_spawn_mode", "service"),
+                ("spawn_concurrency", 4),
             ],
         )
 
@@ -69,6 +86,18 @@ class WorldSpawner(rclpy.node.Node):
             raise ValueError(
                 "road_render_mode must be either 'cached' or 'legacy', "
                 f"got {self.road_render_mode!r}"
+            )
+        self.entity_spawn_mode = self.get_parameter("entity_spawn_mode").value
+        if self.entity_spawn_mode not in ("service", "legacy"):
+            raise ValueError(
+                "entity_spawn_mode must be either 'service' or 'legacy', "
+                f"got {self.entity_spawn_mode!r}"
+            )
+        self.spawn_concurrency = self.get_parameter("spawn_concurrency").value
+        if self.spawn_concurrency < 1:
+            raise ValueError(
+                "spawn_concurrency must be at least 1, "
+                f"got {self.spawn_concurrency!r}"
             )
 
     def spawn_road(self):
@@ -197,6 +226,15 @@ class WorldSpawner(rclpy.node.Node):
             position: A numpy array [x, y, z] representing the position.
             orientation: A numpy array [roll, pitch, yaw] representing the orientation.
         """
+        if self.entity_spawn_mode == "service":
+            self._queued_spawns.append(
+                (
+                    name,
+                    self.make_spawn_request(model, name, position, orientation),
+                )
+            )
+            return
+
         self.get_logger().info(f"Spawning {name}")
         spawn_started = time.perf_counter()
         gz_spawn_model_launch = IncludeLaunchDescription(
@@ -231,6 +269,84 @@ class WorldSpawner(rclpy.node.Node):
             f"PERF spawn_entity={name} "
             f"launch_service_s={time.perf_counter() - spawn_started:.3f}"
         )
+
+    @staticmethod
+    def make_spawn_request(
+        model: str,
+        name: str,
+        position: np.ndarray,
+        orientation: np.ndarray,
+    ) -> SpawnEntity.Request:
+        """Create a Gazebo spawn request from an SDF model and pose."""
+        roll, pitch, yaw = orientation
+        cr, sr = math.cos(roll / 2), math.sin(roll / 2)
+        cp, sp = math.cos(pitch / 2), math.sin(pitch / 2)
+        cy, sy = math.cos(yaw / 2), math.sin(yaw / 2)
+
+        pose = Pose()
+        pose.position.x = float(position[0])
+        pose.position.y = float(position[1])
+        pose.position.z = float(position[2])
+        pose.orientation.x = sr * cp * cy - cr * sp * sy
+        pose.orientation.y = cr * sp * cy + sr * cp * sy
+        pose.orientation.z = cr * cp * sy - sr * sp * cy
+        pose.orientation.w = cr * cp * cy + sr * sp * sy
+
+        factory = EntityFactory()
+        factory.name = name
+        factory.sdf = model
+        factory.pose = pose
+
+        request = SpawnEntity.Request()
+        request.entity_factory = factory
+        return request
+
+    def spawn_queued_models(self):
+        """Spawn queued models with bounded concurrency and check every result."""
+        if not self._queued_spawns:
+            return
+
+        self.get_logger().info(
+            "PERF spawn_strategy=service "
+            f"spawn_concurrency={self.spawn_concurrency} "
+            f"queued_entities={len(self._queued_spawns)}"
+        )
+        if not self._spawn_client.wait_for_service(timeout_sec=30.0):
+            raise TimeoutError(
+                "Timed out waiting for Gazebo spawn service "
+                f"/world/{self.world_name}/create"
+            )
+
+        for batch_start in range(0, len(self._queued_spawns), self.spawn_concurrency):
+            batch = self._queued_spawns[
+                batch_start : batch_start + self.spawn_concurrency
+            ]
+            submitted_at = time.perf_counter()
+            futures = [
+                (name, self._spawn_client.call_async(request))
+                for name, request in batch
+            ]
+
+            for name, future in futures:
+                rclpy.spin_until_future_complete(self, future, timeout_sec=30.0)
+                if not future.done():
+                    raise TimeoutError(
+                        f"Timed out spawning Gazebo entity {name!r}"
+                    )
+
+                response = future.result()
+                if response is None or not response.success:
+                    raise RuntimeError(
+                        f"Gazebo failed to spawn entity {name!r}: {response!r}"
+                    )
+
+                self.get_logger().info(
+                    f"PERF spawn_entity={name} "
+                    "spawn_service_s="
+                    f"{time.perf_counter() - submitted_at:.3f}"
+                )
+
+        self._queued_spawns.clear()
 
 
 def main(args=None):
