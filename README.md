@@ -4,6 +4,8 @@
 
 This package provides a simulation environment for Smarty, built using ROS 2 and Gazebo. It allows you to define custom roads, visualize Smarty's behavior, and test various scenarios.
 
+For a beginner-friendly overview of the architecture, data flow, and main files, see the [German architecture guide](ARCHITEKTUR.md).
+
 
 ## Installation
 Before installation, ensure you have ROS 2 installed and your [smarty workspace](https://github.com/DHBW-Smart-Rollerz/.dotfiles/wiki/5.-Install-Smarty-Software-Stack) is properly set up.
@@ -46,9 +48,11 @@ After that you can start the rest of the smarty software stack if needed. No oth
     ros2 topic pub /control/velocity/target std_msgs/Float32 "{data: 1.0}"
 ``` 
 
-If the simulation runs very slow especially when the whole software stack is running, this is probably due to your PC being not strong enough to handle all of it. In this case you must live with it. Everything should work fine and just run more slowly.
+If the simulation runs slowly, its performance may be limited by Gazebo physics/rendering, camera image transport, visualization, or the rest of the software stack. Measure the relevant processes and real-time factor before attributing the slowdown to host hardware or changing simulation settings.
 At the bottom right of the 3D scene you can see a percentage. If you can't see it - it's black text in front of the black road, so move the view a little. This number indicates the percentage of time that passes in the simulation compared to the real world. A low number is bad and you should reach 30% for the simulation to be usable.
 
+
+For measured startup phases, a camera-bridge comparison, and a proposed investigation order, see the [performance measurement guide](PERFORMANCE.md).
 
 ### Create new road
 
