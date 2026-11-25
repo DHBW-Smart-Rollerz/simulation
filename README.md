@@ -4,9 +4,6 @@
 
 This package provides a simulation environment for Smarty, built using ROS 2 and Gazebo. It allows you to define custom roads, visualize Smarty's behavior, and test various scenarios.
 
-For a beginner-friendly overview of the architecture, data flow, and main files, see the [German architecture guide](ARCHITEKTUR.md).
-
-
 ## Installation
 Before installation, ensure you have ROS 2 installed and your [smarty workspace](https://github.com/DHBW-Smart-Rollerz/.dotfiles/wiki/5.-Install-Smarty-Software-Stack) is properly set up.
 
@@ -55,6 +52,21 @@ At the bottom right of the 3D scene you can see a percentage. If you can't see i
 For measured startup phases, a camera-bridge comparison, and a proposed investigation order, see the [performance measurement guide](PERFORMANCE.md).
 For the pre-branch laptop measurements and hardware configuration, see the
 [laptop baseline report](BASELINE_LAPTOP.md).
+
+### Architecture
+
+The [launch file](launch/simulation.launch.py) starts Gazebo, the ROS–Gazebo
+bridge, the simulation nodes, and optionally RViz or keyboard control.
+`world_spawner` loads the selected [road](models/roads/), renders its surface,
+and adds the road, signs, and obstacles to the world. The control bridge turns
+velocity and steering commands into `/smarty/cmd_vel`; the sensor bridge
+publishes vehicle velocity from Gazebo odometry. Camera and IMU data reach ROS
+through `ros_gz_bridge`. The perception and control stack runs separately.
+
+The ROS node topics and road selection are in
+[`ros_params.yaml`](config/ros_params.yaml); the Gazebo-to-ROS mappings are in
+[`ros_gz_bridge.yaml`](config/ros_gz_bridge.yaml). Check these parameters
+instead of assuming the Python fallback topic names are in use.
 
 ### Create new road
 

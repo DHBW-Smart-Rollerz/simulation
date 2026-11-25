@@ -195,7 +195,7 @@ rate. Investigate these hypotheses one at a time:
 1. Measure the existing road-render cache and persistent spawn client against
    this original commit, separating cold and warm starts and checking that
    every scene entity and road texture is correct. Phase timings in
-   [STARTUP_OPTIMIZATION_COMPARISON.md](STARTUP_OPTIMIZATION_COMPARISON.md)
+   [performance guide](PERFORMANCE.md#exploratory-measurements-4-november-2026)
    are exploratory and do not establish end-to-end startup savings.
 2. Investigate image conversion and transport costs at the existing camera
    settings. The bridge-off experiment in [PERFORMANCE.md](PERFORMANCE.md)
