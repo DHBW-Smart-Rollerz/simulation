@@ -53,6 +53,8 @@ At the bottom right of the 3D scene you can see a percentage. If you can't see i
 
 
 For measured startup phases, a camera-bridge comparison, and a proposed investigation order, see the [performance measurement guide](PERFORMANCE.md).
+For the pre-branch laptop measurements and hardware configuration, see the
+[laptop baseline report](BASELINE_LAPTOP.md).
 
 ### Create new road
 
