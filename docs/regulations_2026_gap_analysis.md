@@ -1,6 +1,6 @@
 # CAuDri Regulations 2026: Simulation Gap Analysis
 
-This document compares the **CAuDri-Challenge Regulations 2026** (source snapshot `regulations-2026-05-06`) with the current state of this simulation package (branch `check-ruleset`, based on `jazzy` @ `e792652`). It lists what is **missing**, **incomplete**, or **not compliant with the rules** and should be added or fixed, so the simulation can serve as a realistic training and test environment for all three dynamic events.
+The target is the **2027 competition**; the 2026 regulations are the newest available ruleset. This document compares the **CAuDri-Challenge Regulations 2026** (source snapshot `regulations-2026-05-06`) with the current state of this simulation package (branch `check-ruleset`, based on `jazzy` @ `e792652`). It lists what is **missing**, **incomplete**, or **not compliant with the rules** and should be added or fixed, so the simulation can serve as a realistic training and test environment for all three dynamic events.
 
 Every item has an ID (for example `FIX-03` or `ELEM-07`) so it can be used directly as an issue or ticket title.
 
@@ -504,7 +504,7 @@ The simulation is meant to be a drop-in replacement for the real car, so everyth
   - Add light links to `models/smarty/model.sdf` and switch them with emissive visuals or gz light entities (for example through the gz `LightConfig` or `VisualConfig` services, or a small gz system plugin).
   - Publish a **normalised light state** for the referee (REF-08): `brake`, `indicator_left`, `indicator_right`, `hazard`, `rc_light`, with timestamps. The referee then checks the flashing frequency and the initial state.
 
-### VEH-02: RC-mode emulation (P2, M)
+### VEH-02: RC-mode emulation (P1, M)
 
 - **Rules (Reg. 4.3, 7.1):**
   - Switching to RC mode must **instantly stop** the car without further steering.
@@ -738,9 +738,9 @@ A pure-Python checker that runs on `Road` objects. It can run in CI and as a CLI
 |---|---|---|
 | **1. Correctness** (about 1 week) | Generated tracks comply with the rules | FIX-01 … FIX-12, TRK-06, TOOL-01 (basic checks) |
 | **2. Static completeness** (about 2 weeks) | Every static element from Reg. 5 can be built | TRK-01, TRK-02, TRK-03, TRK-08, ELEM-01 … ELEM-05, ELEM-07 (static pedestrian), ELEM-08, EVT-01 |
-| **3. Dynamic actors** (about 2–3 weeks) | Obstacle Course scenarios become meaningful | DYN-01 … DYN-07, VEH-01 |
-| **4. Procedure and referee** (about 2–3 weeks) | Score a full run automatically | EVT-02 … EVT-06, REF-01 … REF-12, VEH-02, VEH-03 |
-| **5. Realism** (ongoing) | Robustness and 2027 readiness | TRK-04, TRK-05, TRK-07, headlights, taillights and speaker (VEH-01/02), TOOL-02, TOOL-03, FIX-13 |
+| **3. Dynamic actors** (about 2–3 weeks) | Obstacle Course scenarios become meaningful | DYN-01 … DYN-07, VEH-01 (including headlights and taillights) |
+| **4. Procedure and referee** (about 2–3 weeks) | Score a full run automatically | EVT-02 … EVT-06, REF-01 … REF-12, VEH-02 (including the RC-mode speaker), VEH-03 |
+| **5. Realism** (ongoing) | Robustness and polish | TRK-04, TRK-05, TRK-07, TOOL-02, TOOL-03, FIX-13, ELEM-09 |
 
 Dependencies to keep in mind:
 
@@ -756,8 +756,8 @@ Dependencies to keep in mind:
 These points cannot be decided from the regulations or the code alone. Clarify them with the team or, where marked, with the commission.
 
 1. **Interfaces of the real car:** Which ROS topics and message types does the Smarty stack use for (a) light commands (brake, indicators, RC light), (b) RC-mode state, (c) event-selection and mapping-end buttons, (d) start-gate detection? The simulation should mirror these exactly (VEH-01 … VEH-03, EVT-01).
-2. **Target competition:** The 2026 competition (9 May 2026) is over. Should the simulation target the 2026 rules as documented here, or should items marked "mandatory from 2027" (headlights, taillights, RC-mode speaker) already be treated as P1?
-3. **Pedestrian islands:** They are not described in the 2026 text, but their figures and sign still exist in the sources. Keep `TrafficIsland` as low priority, or remove it? (Commission question.)
+2. **Target competition (decided):** The target is the **2027 competition**. The 2026 regulations are the newest available ruleset and stay the basis of this document. Items marked "mandatory from 2027" (headlights, taillights, RC-mode speaker) are treated as part of VEH-01 and VEH-02, both P1. Re-check this document when the 2027 regulations are published.
+3. **Pedestrian islands (decided):** Keep `TrafficIsland` as is, at low priority (ELEM-09, P3). Revisit if the 2027 regulations describe islands again.
 4. **Referee thresholds that the rules leave open:** speed-limit tolerance and the definition of a "violation episode" (REF-10); the deceleration threshold for a "faulty brake light" (REF-08); the exact geometry of the Abb. 6 right-of-way area (REF-05).
 5. **Dynamic actor implementation:** Pose-driven kinematic models through a ROS node (portable, simple) or a custom gz system plugin in C++ (more accurate, but adds a C++ build to an `ament_python` package)? The recommendation is to start pose-driven.
 6. **Start-gate QR code content:** Does the stack decode the gate's matrix barcode (Abb. 23) or only detect the gate opening? If it decodes it, the exact payload must be reproduced.
