@@ -25,7 +25,9 @@ def _get_stop_line(line1: Line, line2: Line, kind) -> SurfaceMarkingRect:
     beginning_line2 = line2.interpolate(0.02)
 
     # Test which line to draw the stop line at
-    if beginning_line1.distance(line2) < beginning_line2.distance(line1):
+    # Call distance() on the Line wrappers: shapely's Point.distance() does not
+    # accept a Line wrapper as argument.
+    if line2.distance(beginning_line1) < line1.distance(beginning_line2):
         # End of line 1 is the starting point of the stop line
         p1 = beginning_line1
         p2 = line2.interpolate(line2.project(beginning_line1))
@@ -676,7 +678,9 @@ class Intersection(RoadSection):
         east_line = None
         north_line = None
         south_line = None
-        if self.rule == Intersection.EQUAL and self.turn == Intersection.STRAIGHT:
+        if self.rule == Intersection.EQUAL:
+            # Reg. 5.3: at priority-to-right intersections every entry carries
+            # a give-way line, independent of the (mandatory) turn direction.
             west_line = SurfaceMarkingRect.GIVE_WAY_LINE
             east_line = SurfaceMarkingRect.GIVE_WAY_LINE
             north_line = SurfaceMarkingRect.GIVE_WAY_LINE
