@@ -108,6 +108,11 @@ normal authenticated desktop display and excluded the Snap-specific library
 environment. An attempted repeat was rejected because Gazebo processes from a
 smoke test had survived shutdown; the five reported runs use unique partitions
 and verified child-process cleanup. Neither failed attempt is included above.
+All five runs logged Gazebo failing to exit within five seconds of the
+requested SIGINT and being escalated to SIGTERM after sampling. The remaining
+tracked children were subsequently stopped; this is a shutdown issue, not a
+startup or RTF timing. Sanitized launch logs are retained with the raw results;
+local paths and the machine-identifying log directory were replaced.
 
 ### Separate camera and resource diagnostic
 

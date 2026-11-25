@@ -1,0 +1,55 @@
+[INFO] [launch]: All log files can be found below <ROS_LOG_DIR>
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [gazebo-1]: process started with pid [317077]
+[INFO] [parameter_bridge-2]: process started with pid [317078]
+[INFO] [robot_description_publisher-3]: process started with pid [317079]
+[INFO] [car_control_bridge-4]: process started with pid [317080]
+[INFO] [car_sensor_bridge-5]: process started with pid [317082]
+[INFO] [python3-6]: process started with pid [317083]
+[robot_description_publisher-3] [INFO] [1795626341.684776128] [robot_description_publisher]: RobotDescriptionPublisher initialized
+[robot_description_publisher-3] [INFO] [1795626341.685993432] [robot_description_publisher]: Published robot description to /robot_description
+[car_control_bridge-4] [INFO] [1795626341.763414060] [car_control_bridge]: CarControlBridge initialized
+[car_sensor_bridge-5] [INFO] [1795626341.771438210] [car_sensor_bridge]: CarSensorBridge initialized
+[python3-6] [INFO] [1795626342.011641918] [world_spawner]: WorldSpawner node initialized
+[parameter_bridge-2] [INFO] [1795626342.217049444] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/clock (gz.msgs.Clock) -> /clock (rosgraph_msgs/msg/Clock)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.258992013] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/world/smartrollerz/model/smarty/joint_state (gz.msgs.Model) -> /joint_states (sensor_msgs/msg/JointState)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.261508320] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/smarty/pose (gz.msgs.Pose_V) -> /tf (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.263468047] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/smarty/pose_static (gz.msgs.Pose_V) -> /tf_static (tf2_msgs/msg/TFMessage)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.264159127] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/smarty/cmd_vel (gz.msgs.Twist) -> /smarty/cmd_vel (geometry_msgs/msg/Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.264955326] [ros_gz_bridge]: Creating ROS->GZ Bridge: [/smarty/cmd_vel (geometry_msgs/msg/Twist) -> /model/smarty/cmd_vel (gz.msgs.Twist)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.265664269] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/smarty/odometry (gz.msgs.Odometry) -> /smarty/odometry (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.267128837] [ros_gz_bridge]: Creating ROS->GZ Bridge: [/smarty/odometry (nav_msgs/msg/Odometry) -> /model/smarty/odometry (gz.msgs.Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.267699061] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/model/smarty/odometry/ackermann (gz.msgs.Odometry) -> /smarty/odometry/ackermann (nav_msgs/msg/Odometry)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.268280845] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/imu (gz.msgs.IMU) -> /sensor/imu (sensor_msgs/msg/Imu)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.268985760] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/camera (gz.msgs.Image) -> /camera/image/raw (sensor_msgs/msg/Image)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.269616552] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/camera_info (gz.msgs.CameraInfo) -> /camera/camera/info (sensor_msgs/msg/CameraInfo)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.270225605] [ros_gz_bridge]: Creating GZ->ROS Bridge: [/keyboard/keypress (gz.msgs.Int32) -> /gazebo/keypress (std_msgs/msg/Int32)] (Lazy 0)
+[parameter_bridge-2] [INFO] [1795626342.270964351] [ros_gz_bridge]: Passing message from ROS geometry_msgs/msg/Twist to Gazebo gz.msgs.Twist (showing msg only once per type)
+[python3-6] [INFO] [1795626345.940678945] [world_spawner]: Spawning road
+[python3-6] [INFO] [1795626346.684430357] [world_spawner]: Spawning speed_limit_zone_30_start_sign_0
+[python3-6] [INFO] [1795626347.302150263] [world_spawner]: Spawning speed_limit_zone_30_end_sign_0
+[python3-6] [INFO] [1795626348.246544588] [world_spawner]: Spawning turn_right_sign_0
+[python3-6] [INFO] [1795626350.361719014] [world_spawner]: Spawning turn_right_sign_1
+[python3-6] [INFO] [1795626351.048596693] [world_spawner]: Spawning turn_left_sign_0
+[python3-6] [INFO] [1795626351.673271829] [world_spawner]: Spawning turn_left_sign_1
+[python3-6] [INFO] [1795626352.370013442] [world_spawner]: Spawning zebra_crossing_sign_0
+[python3-6] [INFO] [1795626352.759973420] [world_spawner]: Spawning parking_sign_0
+[python3-6] [INFO] [1795626353.371050469] [world_spawner]: Spawning obstacle_0
+[python3-6] [INFO] [1795626353.763030430] [world_spawner]: Spawning obstacle_1
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python3-6]: sending signal 'SIGINT' to process[python3-6]
+[INFO] [car_sensor_bridge-5]: sending signal 'SIGINT' to process[car_sensor_bridge-5]
+[INFO] [car_control_bridge-4]: sending signal 'SIGINT' to process[car_control_bridge-4]
+[INFO] [robot_description_publisher-3]: sending signal 'SIGINT' to process[robot_description_publisher-3]
+[INFO] [parameter_bridge-2]: sending signal 'SIGINT' to process[parameter_bridge-2]
+[INFO] [gazebo-1]: sending signal 'SIGINT' to process[gazebo-1]
+[parameter_bridge-2] [INFO] [1795626445.459483766] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [parameter_bridge-2]: process has finished cleanly [pid 317078]
+[INFO] [robot_description_publisher-3]: process has finished cleanly [pid 317079]
+[INFO] [car_control_bridge-4]: process has finished cleanly [pid 317080]
+[INFO] [car_sensor_bridge-5]: process has finished cleanly [pid 317082]
+[INFO] [python3-6]: process has finished cleanly [pid 317083]
+[ERROR] [gazebo-1]: process[gazebo-1] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [gazebo-1]: sending signal 'SIGTERM' to process[gazebo-1]
+[ERROR] [gazebo-1]: process has died [pid 317077, exit code -15, cmd 'ruby /opt/ros/jazzy/opt/gz_tools_vendor/bin/gz sim <BENCHMARK_BASE>/install/simulation/share/simulation/models/world.sdf --gui-config <BENCHMARK_BASE>/install/simulation/share/simulation/config/gazebo_gui.config -r  --force-version 8'].
+[INFO] [launch]: process[gazebo-1] was required: shutting down launched system
