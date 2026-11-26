@@ -685,16 +685,12 @@ class Intersection(RoadSection):
             east_line = SurfaceMarkingRect.GIVE_WAY_LINE
             north_line = SurfaceMarkingRect.GIVE_WAY_LINE
             south_line = SurfaceMarkingRect.GIVE_WAY_LINE
-        elif (
-            self.rule == Intersection.PRIORITY_YIELD
-            and self.turn == Intersection.STRAIGHT
-        ):
+        elif self.rule == Intersection.PRIORITY_YIELD:
+            # The crossing road (west/east) yields to the ego road, independent
+            # of the ego turn direction (Abb. 16).
             west_line = SurfaceMarkingRect.GIVE_WAY_LINE
             east_line = SurfaceMarkingRect.GIVE_WAY_LINE
-        elif (
-            self.rule == Intersection.PRIORITY_STOP
-            and self.turn == Intersection.STRAIGHT
-        ):
+        elif self.rule == Intersection.PRIORITY_STOP:
             west_line = SurfaceMarkingRect.STOP_LINE
             east_line = SurfaceMarkingRect.STOP_LINE
         elif self.rule == Intersection.YIELD:
