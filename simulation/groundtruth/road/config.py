@@ -14,29 +14,31 @@ class Config:
     SIGN_ROAD_PADDING_INTERVALL = (0.075, 0.125)
 
     @staticmethod
+    def _interpolate(interval, rand):
+        """Map rand in [0, 1] linearly onto the interval.
+
+        Args:
+            interval: (lower, upper) bound tuple.
+            rand: Position inside the interval; 0 gives lower, 1 gives upper.
+
+        Returns:
+            float -- The interpolated value.
+        """
+        lower, upper = interval
+        return lower + (upper - lower) * rand
+
+    @staticmethod
     def get_prio_sign_dist(rand=0.5):
-        return (
-            Config.PRIORITY_SIGN_DISTANCE_INTERVALL[0]
-            + Config.PRIORITY_SIGN_DISTANCE_INTERVALL[1]
-        ) * rand
+        return Config._interpolate(Config.PRIORITY_SIGN_DISTANCE_INTERVALL, rand)
 
     @staticmethod
     def get_turn_sign_dist(rand=0.5):
-        return (
-            Config.TURN_SIGN_DISTANCE_INTERVALL[0]
-            + Config.TURN_SIGN_DISTANCE_INTERVALL[1]
-        ) * rand
+        return Config._interpolate(Config.TURN_SIGN_DISTANCE_INTERVALL, rand)
 
     @staticmethod
     def get_surface_mark_dist(rand=0.5):
-        return (
-            Config.SURFACE_MARKING_DISTANCE_INTERVALL[0]
-            + Config.SURFACE_MARKING_DISTANCE_INTERVALL[1]
-        ) * rand
+        return Config._interpolate(Config.SURFACE_MARKING_DISTANCE_INTERVALL, rand)
 
     @staticmethod
     def get_sign_road_padding(rand=0.5):
-        return (
-            Config.SIGN_ROAD_PADDING_INTERVALL[0]
-            + Config.SIGN_ROAD_PADDING_INTERVALL[1]
-        ) * rand
+        return Config._interpolate(Config.SIGN_ROAD_PADDING_INTERVALL, rand)

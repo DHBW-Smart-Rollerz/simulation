@@ -9,6 +9,7 @@ import simulation.groundtruth.road.sections.type as road_section_type
 from simulation.groundtruth.geometry import Line, Point, Transform, Vector
 from simulation.groundtruth.road.config import Config
 from simulation.groundtruth.road.sections.intersection import Intersection
+from simulation.groundtruth.road.sections.surface_marking import SurfaceMarkingRect
 
 
 class ModuleTest(unittest.TestCase):
@@ -159,6 +160,20 @@ class ModuleTest(unittest.TestCase):
             inter.right_line_east,
             Line([end_point_right_south, left_line_vt_tf.get_points()[1]]),
         )
+
+    def test_equal_give_way_lines_for_every_turn(self):
+        # Reg. 5.3: priority-to-right -> give-way line on all entries,
+        # also with a mandatory turn (FIX-02).
+        for turn in (Intersection.STRAIGHT, Intersection.LEFT, Intersection.RIGHT):
+            with self.subTest(turn=turn):
+                inter = Intersection(rule=Intersection.EQUAL, turn=turn)
+                inter.set_transform(Transform([0, 0], 0))
+                give_way = [
+                    m
+                    for m in inter.surface_markings
+                    if m.kind == SurfaceMarkingRect.GIVE_WAY_LINE
+                ]
+                self.assertEqual(len(give_way), 4)
 
     # rotate around middle point of intersection
     def rotate_around_point(self, rotate_this, angle, rotate_around):
