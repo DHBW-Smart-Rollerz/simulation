@@ -1,16 +1,16 @@
 import itertools
 import os
 
+import launch
 import numpy as np
 import rclpy
 import rclpy.node
 from ament_index_python.packages import get_package_share_directory
-
-import launch
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
+
 from simulation.groundtruth.road import renderer, road
 
 
@@ -151,8 +151,7 @@ class WorldSpawner(rclpy.node.Node):
         position: np.ndarray = None,
         orientation: np.ndarray = None,
     ):
-        """
-        Spawn a model in Gazebo.
+        """Spawn a model in Gazebo.
 
         Args:
             model: Path to the URDF/SDF model file or xml string of the model.
@@ -192,8 +191,7 @@ class WorldSpawner(rclpy.node.Node):
 
 
 def main(args=None):
-    """
-    Main function to start the WorldSpawner.
+    """Main function to start the WorldSpawner.
 
     Keyword Arguments:
         args -- Launch arguments (default: {None})

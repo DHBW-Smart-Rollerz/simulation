@@ -3,7 +3,6 @@
 import functools
 import math
 from dataclasses import dataclass
-from typing import Tuple
 
 import simulation.groundtruth.road.sections.type as road_section_type
 from simulation.groundtruth.geometry import Line, Point, Pose
@@ -45,7 +44,7 @@ class CircularArc(RoadSection):
 
         return self.transform * Line(points)
 
-    def get_ending(self) -> Tuple[Pose, float]:
+    def get_ending(self) -> tuple[Pose, float]:
         """Get the ending of the section as a pose and the curvature.
 
         Returns:

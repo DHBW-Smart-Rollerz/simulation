@@ -15,7 +15,8 @@ class SpeedLimit:
     def traffic_sign(self) -> TrafficSign:
         """TrafficSign: The traffic sign for this speed limit."""
         kind = getattr(
-            TrafficSign, f"ZONE_{abs(self.limit)}_{'START' if self.limit>0 else 'END'}"
+            TrafficSign,
+            f"ZONE_{abs(self.limit)}_{'START' if self.limit > 0 else 'END'}",
         )
 
         return TrafficSign(
@@ -35,6 +36,6 @@ class SpeedLimit:
             depth=0.4,
             kind=getattr(
                 SurfaceMarkingRect,
-                f"ZONE_{abs(self.limit)}_{'START' if self.limit>0 else 'END'}",
+                f"ZONE_{abs(self.limit)}_{'START' if self.limit > 0 else 'END'}",
             ),
         )

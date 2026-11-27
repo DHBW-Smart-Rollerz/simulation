@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Tuple
 
 from simulation.groundtruth.road.sections.road_element import RoadElementRect
 
@@ -14,10 +13,10 @@ class SignTuple:
     large_sign_collision_box_position = (0, 0, 0.15)
     small_sign_collision_box_size = (0.015, 0.1, 0.275)
     small_sign_collision_box_position = (0, 0, 0.1375)
-    collision_box_size: Tuple[float, float, float] = large_sign_collision_box_size
-    collision_box_position: Tuple[
-        float, float, float
-    ] = large_sign_collision_box_position
+    collision_box_size: tuple[float, float, float] = large_sign_collision_box_size
+    collision_box_position: tuple[float, float, float] = (
+        large_sign_collision_box_position
+    )
 
     def __post_init__(self):
         self.id_ = ID.register(ns=100)

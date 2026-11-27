@@ -66,14 +66,13 @@ class RobotDescriptionPublisher(rclpy.node.Node):
         )
 
     def publish_robot_description(self, model_path):
-        """
-        Publishes the model description to the robot_description topic.
+        """Publishes the model description to the robot_description topic.
 
         Arguments:
             model_path -- The path to the model file.
         """
         try:
-            with open(model_path, "r") as file:
+            with open(model_path) as file:
                 model_xml = file.read()
         except FileNotFoundError:
             self.get_logger().error(f"Model file not found: {model_path}")
@@ -90,8 +89,7 @@ class RobotDescriptionPublisher(rclpy.node.Node):
 
 
 def main(args=None):
-    """
-    Main function to start the ROS2ExampleNode.
+    """Main function to start the ROS2ExampleNode.
 
     Keyword Arguments:
         args -- Launch arguments (default: {None})

@@ -3,7 +3,6 @@
 import math
 import numbers
 from contextlib import suppress
-from typing import Tuple, Union
 from warnings import warn
 
 import geometry_msgs.msg as geometry_msgs
@@ -37,11 +36,10 @@ class Vector:
 
     def __init__(self, *args, **kwargs):
         """Vector initialization."""
-
         # Due to recursive calling of the init function, the frame should be set
         # in the first call within the recursion only.
         if not hasattr(self, "_frame"):
-            self._frame = kwargs.get("frame", None)
+            self._frame = kwargs.get("frame")
 
         if "r" in kwargs and "phi" in kwargs:
             # Construct Vector from r, phi
@@ -112,7 +110,7 @@ class Vector:
         return np.array([self.x, self.y, self.z])
 
     @validate_and_maintain_frames
-    def rotated(self, arg: Union[float, Quaternion]):
+    def rotated(self, arg: float | Quaternion):
         """This vector rotated around [0,0,0].
 
         Args:
@@ -123,13 +121,10 @@ class Vector:
         """
         if isinstance(arg, Quaternion):
             return self.__class__(arg.rotate(self.to_numpy()))
-        else:
-            c = math.cos(arg)
-            s = math.sin(arg)
-            # Matrix multiplication
-            return self.__class__(
-                c * self.x - s * self.y, s * self.x + c * self.y, self.z
-            )
+        c = math.cos(arg)
+        s = math.sin(arg)
+        # Matrix multiplication
+        return self.__class__(c * self.x - s * self.y, s * self.x + c * self.y, self.z)
 
     @validate_and_maintain_frames
     def cross(self, vec: "Vector") -> "Vector":
@@ -141,7 +136,6 @@ class Vector:
         Returns:
             Resulting vector.
         """
-
         x = self.y * vec.z - self.z * vec.y
         y = self.z * vec.x - self.x * vec.z
         z = self.x * vec.y - self.y * vec.x
@@ -187,7 +181,6 @@ class Vector:
         Returns:
             :math:`c \\cdot \\vec{v}`
         """
-
         with suppress(AttributeError):
             return self.rotated(c.rotation) + self.__class__(c.translation)
 
@@ -205,7 +198,7 @@ class Vector:
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__qualname__}"
-            f"{tuple(round(val,8) for val in [self.x,self.y,self.z])}"
+            f"{tuple(round(val, 8) for val in [self.x, self.y, self.z])}"
             + (f"(frame: {self._frame.name})" if self._frame is not None else "")
         )
 
@@ -213,7 +206,7 @@ class Vector:
         return hash((self.x, self.y, self.z, self._frame))
 
     @property
-    def xy(self) -> Tuple[float, float]:
+    def xy(self) -> tuple[float, float]:
         """Tuple[float, float]: xy-coordinates as a tuple."""
         return self.x, self.y
 
@@ -231,7 +224,6 @@ class Vector:
 
     def __getattr__(self, name):
         """Delegate attribute access to the shapely object."""
-
         # Avoid recursion for attributes starting with '_'
         if name.startswith("_"):
             raise AttributeError(
@@ -241,8 +233,7 @@ class Vector:
         # Check if the attribute exists in the shapely object
         if hasattr(self._point, name):
             return getattr(self._point, name)
-        else:
-            # Raise an AttributeError if the attribute is not found
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+        # Raise an AttributeError if the attribute is not found
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{name}'"
+        )

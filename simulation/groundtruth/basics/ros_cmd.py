@@ -1,7 +1,7 @@
 import os
 import subprocess
 from dataclasses import dataclass
-from typing import Any, Dict, Tuple
+from typing import Any
 
 
 @dataclass
@@ -10,12 +10,12 @@ class ROSCmd:
 
     cmd_base: str
     """Command string without any arguments."""
-    env_vars: Dict[str, Any] = None
+    env_vars: dict[str, Any] = None
     """Environment variables that should be set prior to running the command."""
-    ros_args: Dict[str, Any] = None
+    ros_args: dict[str, Any] = None
     """ROS arguments passed when running the command."""
 
-    def __init__(self, cmd_base: str, *, env_vars: Dict[str, Any], **ros_args):
+    def __init__(self, cmd_base: str, *, env_vars: dict[str, Any], **ros_args):
         """Initialize ROSCmd.
 
         Args:
@@ -39,7 +39,7 @@ class ROSCmd:
 
         return cmd
 
-    def run(self, capture_output=True, shell=True, text=True) -> Tuple[int, str]:
+    def run(self, capture_output=True, shell=True, text=True) -> tuple[int, str]:
         """Prepare and run the command.
 
         Returns:

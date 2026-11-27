@@ -1,5 +1,3 @@
-from typing import List
-
 from simulation.groundtruth.geometry import Polygon
 from simulation.groundtruth.road.sections.road_section import MarkedLine, RoadSection
 
@@ -28,7 +26,7 @@ def draw_line(
             double_line_gap=double_line_gap,
         )
         return
-    elif marked_line.style == RoadSection.DOUBLE_DASHED_LINE_MARKING:
+    if marked_line.style == RoadSection.DOUBLE_DASHED_LINE_MARKING:
         _draw_double_line(
             ctx,
             line=marked_line,
@@ -38,7 +36,7 @@ def draw_line(
             double_line_gap=double_line_gap,
         )
         return
-    elif marked_line.style == RoadSection.SOLID_DASHED_LINE_MARKING:
+    if marked_line.style == RoadSection.SOLID_DASHED_LINE_MARKING:
         _draw_double_line(
             ctx,
             line=marked_line,
@@ -48,7 +46,7 @@ def draw_line(
             double_line_gap=double_line_gap,
         )
         return
-    elif marked_line.style == RoadSection.DASHED_SOLID_LINE_MARKING:
+    if marked_line.style == RoadSection.DASHED_SOLID_LINE_MARKING:
         _draw_double_line(
             ctx,
             line=marked_line,
@@ -58,7 +56,7 @@ def draw_line(
             double_line_gap=double_line_gap,
         )
         return
-    elif marked_line.style == RoadSection.DASHED_LINE_MARKING:
+    if marked_line.style == RoadSection.DASHED_LINE_MARKING:
         if dash_gap is None:
             dash_gap = dash_length
         ctx.set_dash(
@@ -91,7 +89,7 @@ def _draw_double_line(
     draw_line(ctx, marked_right_line)
 
 
-def draw_polygon(ctx, polygon: Polygon, lines: List[bool] = None):
+def draw_polygon(ctx, polygon: Polygon, lines: list[bool] = None):
     points = polygon.get_points()
     if lines is None:
         lines = [True for _ in range(len(points) - 1)]

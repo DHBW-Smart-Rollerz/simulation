@@ -1,11 +1,11 @@
-from typing import Any, Dict
+from typing import Any
 
 import yaml
 
 
 class SaveOptions:
     def save_as_yaml(
-        self, file_path: str, custom_dict: Dict[str, Any] = None, dumper=yaml.SafeDumper
+        self, file_path: str, custom_dict: dict[str, Any] = None, dumper=yaml.SafeDumper
     ):
         """Save to file as yaml.
 

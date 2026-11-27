@@ -26,67 +26,63 @@ class ID:
         return id_
 
 
-from simulation.groundtruth.road.sections.obstacle import (  # noqa: 402
-    StaticObstacle,
-    ParkingObstacle,
-)
-from simulation.groundtruth.road.sections.traffic_sign import TrafficSign  # noqa: 402
-from simulation.groundtruth.road.sections.surface_marking import (
-    SurfaceMarking,
-)  # noqa: 402
-from simulation.groundtruth.road.sections.surface_marking import (
-    SurfaceMarkingPoly,
-)  # noqa: 402
-from simulation.groundtruth.road.sections.surface_marking import (
-    SurfaceMarkingRect,
-)  # noqa: 402
-from simulation.groundtruth.road.sections.road_section import RoadSection  # noqa: 402
-from simulation.groundtruth.road.sections.straight_road import StraightRoad  # noqa: 402
 from simulation.groundtruth.road.sections.bezier_curve import (
-    QuadBezier,
     CubicBezier,
+    QuadBezier,
 )  # noqa: 402
+from simulation.groundtruth.road.sections.blocked_area import BlockedArea  # noqa: 402
 from simulation.groundtruth.road.sections.circular_arc import (  # noqa: 402
     LeftCircularArc,
     RightCircularArc,
 )
+from simulation.groundtruth.road.sections.custom_section import (
+    CustomSection,
+)  # noqa: 402
 from simulation.groundtruth.road.sections.intersection import Intersection  # noqa: 402
+from simulation.groundtruth.road.sections.obstacle import (  # noqa: 402
+    ParkingObstacle,
+    StaticObstacle,
+)
 from simulation.groundtruth.road.sections.parking_area import (  # noqa: 402
     ParkingArea,
     ParkingLot,
     ParkingSpot,
 )
-from simulation.groundtruth.road.sections.zebra_crossing import (
-    ZebraCrossing,
-)  # noqa: 402
-from simulation.groundtruth.road.sections.blocked_area import BlockedArea  # noqa: 402
+from simulation.groundtruth.road.sections.road_section import RoadSection  # noqa: 402
+from simulation.groundtruth.road.sections.speed_limit import SpeedLimit  # noqa: 402
+from simulation.groundtruth.road.sections.straight_road import StraightRoad  # noqa: 402
+from simulation.groundtruth.road.sections.surface_marking import (
+    SurfaceMarking,
+    SurfaceMarkingPoly,
+    SurfaceMarkingRect,
+)  # noqa: 402  # noqa: 402  # noqa: 402
 from simulation.groundtruth.road.sections.traffic_island import (
     TrafficIsland,
 )  # noqa: 402
-from simulation.groundtruth.road.sections.speed_limit import SpeedLimit  # noqa: 402
-from simulation.groundtruth.road.sections.custom_section import (
-    CustomSection,
+from simulation.groundtruth.road.sections.traffic_sign import TrafficSign  # noqa: 402
+from simulation.groundtruth.road.sections.zebra_crossing import (
+    ZebraCrossing,
 )  # noqa: 402
 
 __all__ = [
-    "QuadBezier",
+    "BlockedArea",
     "CubicBezier",
-    "LeftCircularArc",
-    "RightCircularArc",
+    "CustomSection",
     "Intersection",
-    "StaticObstacle",
-    "ParkingObstacle",
-    "TrafficSign",
-    "SurfaceMarkingPoly",
-    "SurfaceMarkingRect",
+    "LeftCircularArc",
     "ParkingArea",
     "ParkingLot",
+    "ParkingObstacle",
     "ParkingSpot",
-    "StraightRoad",
-    "ZebraCrossing",
+    "QuadBezier",
+    "RightCircularArc",
     "RoadSection",
-    "BlockedArea",
-    "TrafficIsland",
     "SpeedLimit",
-    "CustomSection",
+    "StaticObstacle",
+    "StraightRoad",
+    "SurfaceMarkingPoly",
+    "SurfaceMarkingRect",
+    "TrafficIsland",
+    "TrafficSign",
+    "ZebraCrossing",
 ]

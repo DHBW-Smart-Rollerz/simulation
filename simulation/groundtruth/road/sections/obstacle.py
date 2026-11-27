@@ -1,4 +1,5 @@
 """StaticObstacle on road and ParkingObstacle on ParkingSpot."""
+
 from dataclasses import dataclass
 
 from simulation.groundtruth.road.sections.road_element import RoadElementRect

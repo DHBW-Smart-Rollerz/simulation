@@ -72,8 +72,7 @@ class CarControlBridge(rclpy.node.Node):
         )
 
     def steering_angle_callback(self, msg: std_msgs.msg.Int16):
-        """
-        Callback function for the steering angle subscriber.
+        """Callback function for the steering angle subscriber.
 
         Arguments:
             msg -- The received message.
@@ -81,8 +80,7 @@ class CarControlBridge(rclpy.node.Node):
         self.steering_angle = float(msg.data)
 
     def velocity_callback(self, msg: std_msgs.msg.Float32):
-        """
-        Callback function for the velocity subscriber.
+        """Callback function for the velocity subscriber.
 
         Arguments:
             msg -- The received message.
@@ -99,8 +97,7 @@ class CarControlBridge(rclpy.node.Node):
 
 
 def main(args=None):
-    """
-    Main function to start the CarControlBridge.
+    """Main function to start the CarControlBridge.
 
     Keyword Arguments:
         args -- Launch arguments (default: {None})

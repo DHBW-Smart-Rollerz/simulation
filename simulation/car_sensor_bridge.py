@@ -50,8 +50,7 @@ class CarSensorBridge(rclpy.node.Node):
         )
 
     def odom_callback(self, msg: nav_msgs.msg.Odometry):
-        """
-        Callback function for the odometry subscriber.
+        """Callback function for the odometry subscriber.
 
         Arguments:
             msg -- The received message.
@@ -64,8 +63,7 @@ class CarSensorBridge(rclpy.node.Node):
 
 
 def main(args=None):
-    """
-    Main function to start the CarSensorBridge.
+    """Main function to start the CarSensorBridge.
 
     Keyword Arguments:
         args -- Launch arguments (default: {None})

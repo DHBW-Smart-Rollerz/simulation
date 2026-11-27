@@ -4,8 +4,8 @@ from contextlib import suppress
 
 import geometry_msgs.msg as geometry_msgs
 import numpy as np
-import shapely.affinity as affinity
 import shapely.geometry
+from shapely import affinity
 
 from simulation.groundtruth.geometry.point import Point
 from simulation.groundtruth.geometry.transform import Transform
@@ -32,7 +32,6 @@ class Polygon:
 
     def __init__(self, *args, frame=None):
         """Polygon initialization."""
-
         # Due to recursive calling of the init function, the frame should be set
         # in the first call within the recursion only.
         if not hasattr(self, "_frame"):
@@ -144,7 +143,6 @@ class Polygon:
 
     def __getattr__(self, name):
         """Delegate attribute access to the shapely object."""
-
         # Avoid recursion for attributes starting with '_'
         if name.startswith("_"):
             raise AttributeError(
@@ -154,8 +152,7 @@ class Polygon:
         # Check if the attribute exists in the shapely object
         if hasattr(self._polygon, name):
             return getattr(self._polygon, name)
-        else:
-            # Raise an AttributeError if the attribute is not found
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+        # Raise an AttributeError if the attribute is not found
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{name}'"
+        )

@@ -2,7 +2,6 @@ import itertools
 import os
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Dict, Tuple
 
 import cairo
 
@@ -28,7 +27,7 @@ class Tile:
     name is generated.
     """
 
-    index: Tuple[int, int]
+    index: tuple[int, int]
     """Position within the lattice of tiles on the groundplane."""
     size: Vector
     """Size of the tile."""
@@ -39,7 +38,7 @@ class Tile:
 
     (Not the complete path, just the name of the folder!)
     """
-    sections: Dict[int, RoadSection] = field(default_factory=set)
+    sections: dict[int, RoadSection] = field(default_factory=set)
     """All sections that are (atleast partly) on this tile."""
 
     """Automatically generated when rendering."""

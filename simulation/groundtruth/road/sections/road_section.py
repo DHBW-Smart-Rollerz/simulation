@@ -4,7 +4,6 @@ import functools
 import itertools
 import math
 from dataclasses import dataclass, field
-from typing import List, Tuple
 
 from simulation.groundtruth.geometry import (
     Line,
@@ -78,13 +77,13 @@ class RoadSection(Transformable):
     """Marking type of the middle line."""
     right_line_marking: str = SOLID_LINE_MARKING
     """Marking type of the right line."""
-    obstacles: List[StaticObstacle] = field(default_factory=list)
+    obstacles: list[StaticObstacle] = field(default_factory=list)
     """Obstacles in the road section."""
-    traffic_signs: List[TrafficSign] = field(default_factory=list)
+    traffic_signs: list[TrafficSign] = field(default_factory=list)
     """Traffic signs in the road section."""
-    surface_markings: List[SurfaceMarking] = field(default_factory=list)
+    surface_markings: list[SurfaceMarking] = field(default_factory=list)
     """Surface markings in the road section."""
-    _speed_limits: List[SpeedLimit] = field(default_factory=list)
+    _speed_limits: list[SpeedLimit] = field(default_factory=list)
     """Speed limits in the road section."""
     TYPE = None
     """Type of the road section."""
@@ -92,9 +91,9 @@ class RoadSection(Transformable):
     """Length of Road up to this section."""
 
     def __post_init__(self):
-        assert (
-            self.__class__.TYPE is not None
-        ), "Subclass of RoadSection missing TYPE declaration!"
+        assert self.__class__.TYPE is not None, (
+            "Subclass of RoadSection missing TYPE declaration!"
+        )
 
         super().__post_init__()
         self.set_transform(self.transform)
@@ -128,7 +127,7 @@ class RoadSection(Transformable):
         return self.middle_line.parallel_offset(Config.road_width, "right")
 
     @property
-    def lines(self) -> List[MarkedLine]:
+    def lines(self) -> list[MarkedLine]:
         """List[MarkedLine]: All road lines with their marking type."""
         lines = []
         lines.append(
@@ -149,7 +148,7 @@ class RoadSection(Transformable):
         return lines
 
     @property
-    def speed_limits(self) -> List[SpeedLimit]:
+    def speed_limits(self) -> list[SpeedLimit]:
         """Speed limits in the road section."""
         return self._speed_limits
 
@@ -161,7 +160,7 @@ class RoadSection(Transformable):
         """
         return Polygon(self.middle_line.buffer(1.5 * Config.road_width))
 
-    def get_beginning(self) -> Tuple[Pose, float]:
+    def get_beginning(self) -> tuple[Pose, float]:
         """Get the beginning of the section as a pose and the curvature.
 
         Returns:
@@ -176,7 +175,7 @@ class RoadSection(Transformable):
 
         return (pose, curvature)
 
-    def get_ending(self) -> Tuple[Pose, float]:
+    def get_ending(self) -> tuple[Pose, float]:
         """Get the ending of the section as a pose and the curvature.
 
         Returns:

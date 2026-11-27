@@ -18,7 +18,7 @@ def generate_sdf_model(
     Returns:
         str: The generated SDF string.
     """
-    return """
+    return f"""
         <sdf version="1.8">
         <model name='model'>
             <static>1</static>
@@ -33,10 +33,10 @@ def generate_sdf_model(
                     </geometry>
                 </visual>
                 <collision name='collision'>
-                    <pose>{box_position_x} {box_position_y} {box_position_z} 0 0 0</pose>
+                    <pose>{collision_box_position[0]} {collision_box_position[1]} {collision_box_position[2]} 0 0 0</pose>
                     <geometry>
                         <box>
-                        <size>{box_size_x} {box_size_y} {box_size_z}</size>
+                        <size>{collision_box_size[0]} {collision_box_size[1]} {collision_box_size[2]}</size>
                         </box>
                     </geometry>
                 </collision>
@@ -44,12 +44,4 @@ def generate_sdf_model(
             </link>
         </model>
         </sdf>
-        """.format(
-        mesh=mesh,
-        box_position_x=collision_box_position[0],
-        box_position_y=collision_box_position[1],
-        box_position_z=collision_box_position[2],
-        box_size_x=collision_box_size[0],
-        box_size_y=collision_box_size[1],
-        box_size_z=collision_box_size[2],
-    )
+        """

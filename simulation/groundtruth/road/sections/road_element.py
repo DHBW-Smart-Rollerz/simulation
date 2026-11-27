@@ -4,7 +4,6 @@ Examples are traffic signs, obstacles or surface markings (e.g. turn arrow on th
 """
 
 from dataclasses import dataclass, field
-from typing import Union
 
 from simulation.groundtruth.geometry import Line, Point, Polygon, Transform
 from simulation.groundtruth.road.sections.transformable import Transformable
@@ -22,7 +21,7 @@ class RoadElement(Transformable):
     )
     """Polygon: Frame of the element in local coordinates."""
 
-    def set_transform(self, obj: Union[Line, Transform]):
+    def set_transform(self, obj: Line | Transform):
         """Calculate the correct transform to this element.
 
         Depending on :attr:`self.normalize_x` the positional behavior is different. If
@@ -91,9 +90,9 @@ class RoadElementRect(RoadElement):
     ):
         """Initialize a retangular road element."""
         for obj in arc_length, y, width, depth, angle:
-            assert isinstance(obj, float) or isinstance(
-                obj, int
-            ), f"Should be a number but is {obj}"
+            assert isinstance(obj, float) or isinstance(obj, int), (
+                f"Should be a number but is {obj}"
+            )
 
         self.width = width
         self.depth = depth

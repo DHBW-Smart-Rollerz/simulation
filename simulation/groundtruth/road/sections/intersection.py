@@ -3,7 +3,6 @@
 import functools
 import math
 from dataclasses import dataclass
-from typing import List, Tuple
 
 import numpy as np
 
@@ -360,19 +359,18 @@ class Intersection(RoadSection):
         """Line: Middle line of the intersection."""
         if self.turn == Intersection.LEFT:
             return self.middle_line_south + self.ls_circle + self.middle_line_west
-        elif self.turn == Intersection.RIGHT:
+        if self.turn == Intersection.RIGHT:
             return self.middle_line_south + self.rs_circle + self.middle_line_east
-        else:
-            straight_m_l = Line(
-                [
-                    self.middle_line_south.get_points()[-1],
-                    self.middle_line_north.get_points()[0],
-                ]
-            )
-            return self.middle_line_south + straight_m_l + self.middle_line_north
+        straight_m_l = Line(
+            [
+                self.middle_line_south.get_points()[-1],
+                self.middle_line_north.get_points()[0],
+            ]
+        )
+        return self.middle_line_south + straight_m_l + self.middle_line_north
 
     @property
-    def lines(self) -> List[MarkedLine]:
+    def lines(self) -> list[MarkedLine]:
         """List[MarkedLine]: All road lines with their marking type."""
         lines = []
         south_middle_end_length = self.prev_length + self.middle_line_south.length
@@ -500,13 +498,13 @@ class Intersection(RoadSection):
 
         return lines
 
-    def get_beginning(self) -> Tuple[Pose, float]:
+    def get_beginning(self) -> tuple[Pose, float]:
         return (
             Pose(self.transform * Point(0, 0), self.transform.get_angle() + math.pi),
             0,
         )
 
-    def get_ending(self) -> Tuple[Pose, float]:
+    def get_ending(self) -> tuple[Pose, float]:
         turn_direction = (
             self.exit_direction if self.exit_direction is not None else self.turn
         )
@@ -534,7 +532,7 @@ class Intersection(RoadSection):
         """
         return Polygon(self.middle_line.buffer(1.5 * self.size))
 
-    def _get_intersection_traffic_signs(self) -> List[TrafficSign]:
+    def _get_intersection_traffic_signs(self) -> list[TrafficSign]:
         signs = []
         if self.turn == Intersection.LEFT:
             # sign "turn left" in south
@@ -597,7 +595,7 @@ class Intersection(RoadSection):
 
         # stvo-206: Stoppschild,
         # stvo-306: Vorfahrtsstraße
-        # todo: also add turning signal if we are not on the outer turn lane
+        # TODO: also add turning signal if we are not on the outer turn lane
         # on the opposite side
         type_map_opposite = {
             Intersection.PRIORITY_YIELD: TrafficSign.YIELD,
@@ -630,7 +628,7 @@ class Intersection(RoadSection):
 
         return signs
 
-    def _get_intersection_surface_markings(self) -> List[SurfaceMarkingRect]:
+    def _get_intersection_surface_markings(self) -> list[SurfaceMarkingRect]:
         markings = []
         if self.turn == Intersection.LEFT or self.turn == Intersection.RIGHT:
             own_marking = (

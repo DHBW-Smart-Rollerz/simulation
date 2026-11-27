@@ -1,8 +1,9 @@
 """Quadratic- and CubicBezierCurves."""
 
 import functools
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Sequence, Union
+from typing import Union
 
 import numpy as np
 
@@ -11,7 +12,7 @@ from simulation.groundtruth.geometry import Line, Point
 from simulation.groundtruth.road.sections.road_section import RoadSection
 
 
-def _read_point(p: Union[Point, Sequence[float]]) -> np.ndarray:
+def _read_point(p: Point | Sequence[float]) -> np.ndarray:
     """Get numpy array from point or coordinate sequence."""
     try:
         return p.to_numpy()[:2]
@@ -44,9 +45,9 @@ class BezierCurve(RoadSection):
 
     def __post_init__(self):
         assert self.p1 is not None, f"Missing first point for {self.__class__}."
-        assert (
-            self.p1.y == 0
-        ), f"Y-Value of first point hast to be zero. Not {self.p1.y}!"
+        assert self.p1.y == 0, (
+            f"Y-Value of first point hast to be zero. Not {self.p1.y}!"
+        )
         """Y-Value of first control point has to be zero to have a gradient of zero at the start.
 
         If this is not the case the bezier curve does not fit to the previous road section.
@@ -103,7 +104,7 @@ class CubicBezier(BezierCurve):
 
     TYPE = road_section_type.CUBIC_BEZIER
 
-    p3: Union[Point, Sequence[float]] = None
+    p3: Point | Sequence[float] = None
     """Control point 3."""
 
     def __post_init__(self):

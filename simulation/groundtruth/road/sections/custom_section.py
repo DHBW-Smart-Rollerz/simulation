@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import List, Tuple
 
 import numpy as np
 import yaml
@@ -15,7 +14,7 @@ from simulation.groundtruth.road.sections.road_section import RoadSection
 class CustomSection(RoadSection, InitOptions, SaveOptions):
     TYPE = road_section_type.CUSTOM
 
-    middle_line_points: List[np.array] = field(default_factory=list)
+    middle_line_points: list[np.array] = field(default_factory=list)
     """Points that make up the middle line."""
 
     @property
@@ -24,10 +23,8 @@ class CustomSection(RoadSection, InitOptions, SaveOptions):
 
     def save_as_yaml(self, file_path: str):
         """Save the section as a yaml file."""
-
         custom_dict = dict(self.__dict__)
-        if "transform" in custom_dict:
-            del custom_dict["transform"]
+        custom_dict.pop("transform", None)
         super().save_as_yaml(file_path, custom_dict, dumper=yaml.Dumper)
 
     @classmethod
@@ -36,8 +33,8 @@ class CustomSection(RoadSection, InitOptions, SaveOptions):
         return super().from_yaml(file_path, loader=yaml.Loader)
 
     def split_by(
-        self, sections: List[Tuple[int, RoadSection]], x_buffer=1
-    ) -> List[RoadSection]:
+        self, sections: list[tuple[int, RoadSection]], x_buffer=1
+    ) -> list[RoadSection]:
         """Add a number of other sections along this section.
 
         Args:
@@ -78,7 +75,8 @@ class CustomSection(RoadSection, InitOptions, SaveOptions):
 
         def distribute_objects(attribute_name: str):
             """Distribute objects (traffic signs, obstacles, surface_markings, ...) to
-            resulting sections."""
+            resulting sections.
+            """
             for obj in self.__getattribute__(attribute_name):
                 x = self.middle_line.project(obj.center)
                 if x < x_beginning:

@@ -1,11 +1,11 @@
-from typing import Any, Dict
+from typing import Any
 
 import yaml
 
 
 class InitOptions:
     @classmethod
-    def from_dict(cls, **kwargs: Dict[str, Any]):
+    def from_dict(cls, **kwargs: dict[str, Any]):
         """Create instance from relevant keywords in dictionary.
 
         Instead of passing exactly the arguments defined by the class' __init__,
@@ -15,12 +15,9 @@ class InitOptions:
         Example:
             >>> from simulation.utils.basics.init_options import InitOptions
             >>> class SomeClass(InitOptions):
-            ...
             ...     def __init__(self, arg1, arg2):
             ...         self.arg1 = arg1
             ...         self.arg2 = arg2
-            ...
-            ...
             >>> many_args = {"arg1": 1, "arg2": 2, "arg3": 3}
             ... # This will raise an exception because __init__ does not expect arg3!
             >>> try:
@@ -43,7 +40,8 @@ class InitOptions:
 
     def _from_yaml(cls, file_path: str, loader: yaml.Loader = yaml.SafeLoader):
         """Helper method to allow passing a custom `cls` instead of being forced to use the
-        classmethod syntax."""
+        classmethod syntax.
+        """
         # Extract information from yaml file as a dict
         with open(file_path) as file:
             specs_dict = yaml.load(file, Loader=loader)

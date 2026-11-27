@@ -35,7 +35,7 @@ class Frame:
         """Calling an instance transforms the argument's coordinates into this frame."""
         if not hasattr(geom_obj, "_frame"):
             raise ValueError("Cannot transform object that has no frame.")
-        elif geom_obj._frame is self:
+        if geom_obj._frame is self:
             return geom_obj
         if geom_obj._frame.name not in self._connected_frames:
             raise ValueError("Transformation to frame {geom_obj._frame} is unknown.")
@@ -68,9 +68,8 @@ def validate_and_maintain_frames(func):
                     result._frame = obj2._frame
 
             return result
-        else:
-            raise ValueError(
-                f"The objects {self} and {obj2} are defined in different coordinate frames."
-            )
+        raise ValueError(
+            f"The objects {self} and {obj2} are defined in different coordinate frames."
+        )
 
     return decorator

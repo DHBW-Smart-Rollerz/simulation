@@ -130,8 +130,7 @@ class KeyboardControl(rclpy.node.Node):
 
 
 def main(args=None):
-    """
-    Main function to start the KeyboardControl.
+    """Main function to start the KeyboardControl.
 
     Keyword Arguments:
         args -- Launch arguments (default: {None})

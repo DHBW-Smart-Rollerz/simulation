@@ -8,7 +8,6 @@ import importlib
 import os
 import random
 from dataclasses import dataclass, field
-from typing import List, Tuple
 
 import cairo
 
@@ -50,7 +49,7 @@ class Road:
     be different random values every time the road is created.
     """
 
-    sections: List[RoadSection] = field(default_factory=list)
+    sections: list[RoadSection] = field(default_factory=list)
     """All sections of the road."""
 
     length: float = 0
@@ -73,7 +72,7 @@ class Road:
             section._is_start = True
         if section.id > 0:
             # Pass ending of last section as the transformation to next section
-            ending: Tuple[Pose, float] = self.sections[-1].get_ending()
+            ending: tuple[Pose, float] = self.sections[-1].get_ending()
             section.set_transform(Transform(ending[0], ending[0].orientation))
             section.prev_length = self.length
         self.length = self.length + section.middle_line.length
@@ -87,7 +86,6 @@ class Road:
         Args:
             p_curvature: Scale the curvature of the resulting loop.
         """
-
         # Global position of the end of the road
         end_pose_global, _ = self.sections[-1].get_ending()
 
@@ -159,7 +157,7 @@ class Road:
         return size
 
 
-def _import_road_module(path: str) -> Tuple[Road, str, str]:
+def _import_road_module(path: str) -> tuple[Road, str, str]:
     module_name = os.path.basename(path.rstrip(".py"))
 
     try:
@@ -170,7 +168,7 @@ def _import_road_module(path: str) -> Tuple[Road, str, str]:
         raise ImportError(f"Could not import road from {path}: {e}")
 
     try:
-        road = getattr(module, "road")
+        road = module.road
     except AttributeError:
         raise AttributeError("The provided road does not contain a 'road' object.")
 
@@ -178,14 +176,12 @@ def _import_road_module(path: str) -> Tuple[Road, str, str]:
 
 
 def load(road_path: str, seed: str = "smartrollerz") -> Road:
-    """
-    Load a road from a python file.
+    """Load a road from a python file.
 
     Args:
         road_path: Path to the python file containing the road.
         seed: Predetermine random values.
     """
-
     # Set random seed
     # set it at this point because the module is reloaded afterwards
     # the above import is just to ensure that the road is in the module cache

@@ -34,7 +34,6 @@ class Pose:
 
     def __init__(self, *args, frame=None):
         """Pose initialization."""
-
         # Due to recursive calling of the init function, the frame should be set
         # in the first call within the recursion only.
         if not hasattr(self, "_frame"):
@@ -150,8 +149,9 @@ class Pose:
         if self.__class__ != pose.__class__:
             return NotImplemented
         return (
-            (self.orientation * pose.orientation.inverse).angle
-        ) < TOLERANCE and self.position.to_numpy().all() == pose.position.to_numpy().all()
+            ((self.orientation * pose.orientation.inverse).angle) < TOLERANCE
+            and self.position.to_numpy().all() == pose.position.to_numpy().all()
+        )
 
     def __repr__(self) -> str:
         return (

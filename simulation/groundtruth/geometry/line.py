@@ -3,9 +3,9 @@
 from contextlib import suppress
 
 import numpy as np
-import shapely.affinity as affinity
 import shapely.geometry
 from scipy.ndimage import filters
+from shapely import affinity
 
 from simulation.groundtruth.geometry.point import Point
 from simulation.groundtruth.geometry.pose import Pose
@@ -38,9 +38,9 @@ def ensure_valid_arc_length(*, approx_distance=APPROXIMATION_DISTANCE) -> callab
                     "The provided arc length is less than 0 \
                             or greater than the line's length."
                 )
-            elif self.length < 2 * approx_distance:
+            if self.length < 2 * approx_distance:
                 raise ValueError(
-                    f"The line must be at least {2*approx_distance} long but is only"
+                    f"The line must be at least {2 * approx_distance} long but is only"
                     f"{self.length} long."
                 )
 
@@ -82,12 +82,11 @@ class Line:
 
         if arc_length == 0:
             return Line(), Line(coords)
-        elif arc_length == line.length:
+        if arc_length == line.length:
             return Line(coords), Line()
-        else:
-            assert (
-                arc_length > 0.0 and arc_length < line.length
-            ), "Invalid arc length given."
+        assert arc_length > 0.0 and arc_length < line.length, (
+            "Invalid arc length given."
+        )
 
         for i, p in enumerate(coords):
             pd = line.project(Point(p))
@@ -102,7 +101,6 @@ class Line:
 
     def __init__(self, *args, frame=None):
         """Line initialization."""
-
         # Due to recursive calling of the init function, the frame should be set
         # in the first call within the recursion only.
         if not hasattr(self, "_frame"):
@@ -148,9 +146,9 @@ class Line:
         Returns:
             Line shifted by an offset into the left or right direction.
         """
-        assert (
-            side == "right" or side == "left"
-        ), "Parallel offset is only possible to the right or left!"
+        assert side == "right" or side == "left", (
+            "Parallel offset is only possible to the right or left!"
+        )
 
         offset_line = self._linestring.parallel_offset(offset, side)
         try:
@@ -323,7 +321,6 @@ class Line:
 
     def __getattr__(self, name):
         """Delegate attribute access to the shapely object."""
-
         # Avoid recursion for attributes starting with '_'
         if name.startswith("_"):
             raise AttributeError(
@@ -333,8 +330,7 @@ class Line:
         # Check if the attribute exists in the shapely object
         if hasattr(self._linestring, name):
             return getattr(self._linestring, name)
-        else:
-            # Raise an AttributeError if the attribute is not found
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+        # Raise an AttributeError if the attribute is not found
+        raise AttributeError(
+            f"'{self.__class__.__name__}' object has no attribute '{name}'"
+        )

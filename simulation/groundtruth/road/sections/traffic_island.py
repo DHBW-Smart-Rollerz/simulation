@@ -3,7 +3,6 @@
 import functools
 import math
 from dataclasses import dataclass
-from typing import List
 
 import simulation.groundtruth.road.sections.type as road_section_type
 from simulation.groundtruth.geometry import Line, Point, Polygon, Vector
@@ -203,7 +202,7 @@ class TrafficIsland(RoadSection):
         return self.middle_l_zebra_start + Vector(self.zebra_length, 0)
 
     @property
-    def bezier_points_mid_r_start(self) -> List[Point]:
+    def bezier_points_mid_r_start(self) -> list[Point]:
         return add_quad_bezier_points(
             self.middle_start.to_numpy(),
             (self.middle_start + Vector(self.p_offset, 0)).to_numpy(),
@@ -212,7 +211,7 @@ class TrafficIsland(RoadSection):
         )
 
     @property
-    def bezier_points_mid_r_end(self) -> List[Point]:
+    def bezier_points_mid_r_end(self) -> list[Point]:
         return add_quad_bezier_points(
             self.middle_r_zebra_end.to_numpy(),
             (self.middle_r_zebra_end + Vector(self.p_offset, 0)).to_numpy(),
@@ -221,7 +220,7 @@ class TrafficIsland(RoadSection):
         )
 
     @property
-    def bezier_points_mid_l_start(self) -> List[Point]:
+    def bezier_points_mid_l_start(self) -> list[Point]:
         return add_quad_bezier_points(
             self.middle_start.to_numpy(),
             (self.middle_start + Vector(self.p_offset, 0)).to_numpy(),
@@ -230,7 +229,7 @@ class TrafficIsland(RoadSection):
         )
 
     @property
-    def bezier_points_mid_l_end(self) -> List[Point]:
+    def bezier_points_mid_l_end(self) -> list[Point]:
         return add_quad_bezier_points(
             self.middle_l_zebra_end.to_numpy(),
             (self.middle_l_zebra_end + Vector(self.p_offset, 0)).to_numpy(),
@@ -295,7 +294,7 @@ class TrafficIsland(RoadSection):
         return self.middle_line_l.parallel_offset(Config.road_width, "left")
 
     @property
-    def lines(self) -> List[MarkedLine]:
+    def lines(self) -> list[MarkedLine]:
         """List[MarkedLine]: All road lines with their marking type."""
         lines = []
         lines.append(

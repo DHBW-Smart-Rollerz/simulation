@@ -3,7 +3,6 @@
 import itertools
 import math
 from dataclasses import dataclass, field
-from typing import List
 
 import simulation.groundtruth.road.sections.type as road_section_type
 from simulation.groundtruth.geometry import Line, Point, Polygon, Transform
@@ -86,12 +85,11 @@ class ParkingSpot(RoadElementRect):
             self.x_surface_marking.set_transform(self.transform)
 
     @property
-    def lines(self) -> List[MarkedLine]:
+    def lines(self) -> list[MarkedLine]:
         """List[MarkedLine]: Borderlines for spot if spot is on the left.
 
         Marking type is always solid.
         """
-
         lines = []
         if self._side == ParkingLot.LEFT_SIDE or self.kind == self.BLOCKED:
             spot_points = self.frame.get_points()
@@ -133,7 +131,7 @@ class ParkingLot(Transformable):
 
     start: float = 0
     """Start of the parking lot along the middle line relative to the parking area."""
-    spots: List[ParkingSpot] = field(default_factory=list)
+    spots: list[ParkingSpot] = field(default_factory=list)
     """Parking spots within this parking lot."""
     _side: str = RIGHT_SIDE
     """Side of the road."""
@@ -201,12 +199,12 @@ class ParkingLot(Transformable):
         return self.transform * border
 
     @property
-    def obstacles(self) -> List[ParkingObstacle]:
+    def obstacles(self) -> list[ParkingObstacle]:
         """List[ParkingObstacle]: All obstacles on spots."""
         return [spot.obstacle for spot in self.spots if spot.obstacle is not None]
 
     @property
-    def lines(self) -> List[MarkedLine]:
+    def lines(self) -> list[MarkedLine]:
         """List[MarkedLine]: All border lines with solid marking type."""
         lines = []
         lines.append(MarkedLine.from_line(self.border, RoadSection.SOLID_LINE_MARKING))
@@ -232,9 +230,9 @@ class ParkingArea(StraightRoad):
     """If the parking area has a start line."""
     start_line_length: float = 0.06
     """Length of the start line (if one is added."""
-    left_lots: List[ParkingLot] = field(default_factory=list)
+    left_lots: list[ParkingLot] = field(default_factory=list)
     """Parking lots on the left side."""
-    right_lots: List[ParkingLot] = field(default_factory=list)
+    right_lots: list[ParkingLot] = field(default_factory=list)
     """Parking lots on the right side."""
 
     def __post_init__(self):
@@ -320,16 +318,14 @@ class ParkingArea(StraightRoad):
         """
         biggest_depth = 0
         for ll, rl in zip(self.left_lots, self.right_lots):
-            if ll.depth > biggest_depth:
-                biggest_depth = ll.depth
-            if rl.depth > biggest_depth:
-                biggest_depth = rl.depth
+            biggest_depth = max(biggest_depth, ll.depth)
+            biggest_depth = max(biggest_depth, rl.depth)
         return Polygon(
             self.middle_line.buffer(1.5 * (biggest_depth + Config.road_width))
         )
 
     @property
-    def parking_obstacles(self) -> List[ParkingObstacle]:
+    def parking_obstacles(self) -> list[ParkingObstacle]:
         """List[ParkingObstacle]: All obstacles on parking spots."""
         return sum(
             (lot.obstacles for lot in itertools.chain(self.left_lots, self.right_lots)),
@@ -337,7 +333,7 @@ class ParkingArea(StraightRoad):
         )
 
     @property
-    def lines(self) -> List[MarkedLine]:
+    def lines(self) -> list[MarkedLine]:
         """List[MarkedLine]: All borderlines with their marking type."""
         lines = []
         lines.extend(super().lines)

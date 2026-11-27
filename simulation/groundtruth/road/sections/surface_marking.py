@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Tuple
 
 from simulation.groundtruth.road.sections.road_element import (
     RoadElement,
@@ -47,7 +46,7 @@ class SurfaceMarking:
     ZONE_80_END = (ID.register(ID_NS), "ZONE_80_END")
     ZONE_90_END = (ID.register(ID_NS), "ZONE_90_END")
 
-    kind: Tuple[int, str] = None
+    kind: tuple[int, str] = None
     """Kind of the surface marking."""
 
     def __post_init__(self):
@@ -65,7 +64,7 @@ class SurfaceMarkingPoly(RoadElement, SurfaceMarking):
 class SurfaceMarkingRect(RoadElementRect, SurfaceMarking):
     def __init__(
         self,
-        kind: Tuple[int, str],
+        kind: tuple[int, str],
         arc_length: float,
         y: float = -0.5,
         depth: float = 0.4,

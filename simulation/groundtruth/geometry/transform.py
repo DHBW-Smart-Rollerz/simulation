@@ -35,7 +35,6 @@ class Transform:
 
     def __init__(self, *args, frame=None):
         """Transform initialization."""
-
         # Due to recursive calling of the init function, the frame should be set
         # in the first call within the recursion only.
         if not hasattr(self, "_frame"):
@@ -48,7 +47,6 @@ class Transform:
         with suppress(Exception):
             if isinstance(args[1], numbers.Number):
                 args = (args[0], Quaternion(axis=[0, 0, 1], radians=args[1]))
-            pass
 
         # Attempt default init
         with suppress(IndexError, NotImplementedError, TypeError):
@@ -113,7 +111,6 @@ class Transform:
         Returns:
             The angle that a vector is rotated, when this transformation is applied.
         """
-
         # Project the rotation axis onto the rotation axis to get the amount of the rotation
         # that is in the axis' direction!
         # Also the quaternions rotation axis is sometimes flipped at which point
@@ -183,8 +180,8 @@ class Transform:
 
     def __repr__(self) -> str:
         return (
-            f"Transform(translation={repr(self.translation)},"
-            + f"rotation={repr(self.rotation)}"
+            f"Transform(translation={self.translation!r},"
+            + f"rotation={self.rotation!r}"
             + (f",frame={self._frame.name}" if self._frame is not None else "")
             + ")"
         )

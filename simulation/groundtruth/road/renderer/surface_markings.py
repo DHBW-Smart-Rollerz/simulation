@@ -1,6 +1,5 @@
 import math
 import os
-from typing import List
 
 import cairo
 from ament_index_python import get_package_share_directory
@@ -176,7 +175,6 @@ def draw_blocked_area(ctx, frame: Polygon):
 
             Line between second and third point has to be parallel to middle/right line.
     """
-
     points = frame.get_points()
     left = Line([points[1], points[2], points[3]])
     v = Vector(Vector(points[0]) - Vector(points[3]))
@@ -299,7 +297,7 @@ def draw_blocked_stripes(
     v: Vector,
     start: Point,
     line: Line,
-    points: List[Point],
+    points: list[Point],
     angle: float,
     gap: float,
 ):
